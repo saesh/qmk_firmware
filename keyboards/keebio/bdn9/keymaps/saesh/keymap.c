@@ -43,26 +43,21 @@ qk_tap_dance_action_t tap_dance_actions[] = {
   [TD_CLOSE_UNDO] = ACTION_TAP_DANCE_DOUBLE(CLOSE_TAB, UNDO_CLOSE),
 };
 
-// songs
-float media_layer_sound[][2]    = SONG(STARTUP_SOUND);
-float browser_layer_sound[][2]  = SONG(ONE_UP_SOUND);
-float settings_layer_sound[][2] = SONG(ZELDA_TREASURE);
-
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [MEDIA] = LAYOUT(
-        KC_MUTE, MO(SETTINGS),  KC_END, \
-        KC_VOLD,      KC_MSTP,  KC_VOLU, \
-        KC_MPRV,      KC_MPLY,  KC_MNXT \
+           KC_MUTE, MO(SETTINGS),      KC_END, \
+        A(KC_LEFT),      KC_MSTP, A(KC_RIGHT), \
+           KC_MPRV,      KC_MPLY,     KC_MNXT \
     ),
     [SETTINGS] = LAYOUT(
-            RESET, _______, _______, \
-          BL_TOGG, RGB_TOG,  AU_TOG, \
-      TG(BROWSER), _______, _______ \
+          RESET, _______,     _______, \
+        _______, _______,     _______, \
+        _______, _______, TG(BROWSER) \
     ),
     [BROWSER] = LAYOUT(
-        _______,         TO(MEDIA),  _______, \
-       PREV_TAB,            RELOAD, NEXT_TAB, \
-        NETWORK, TD(TD_CLOSE_UNDO),  NEW_TAB \
+         _______,         TO(MEDIA),  _______, \
+        PREV_TAB,            RELOAD, NEXT_TAB, \
+         NETWORK, TD(TD_CLOSE_UNDO),  NEW_TAB \
     )
 };
 
@@ -81,24 +76,4 @@ void encoder_update_user(uint8_t index, bool clockwise) {
             tap_code(KC_WH_U);
         }
     }
-}
-
-// play sound when switching layers
-uint32_t layer_state_set_user(uint32_t state) {
-#ifdef AUDIO_ENABLE
-	switch (biton32(state)) {
-	case MEDIA:
-	  PLAY_SONG(media_layer_sound);
-	  break;
-  case SETTINGS:
-    PLAY_SONG(settings_layer_sound);
-    break;
-  case BROWSER:
-    PLAY_SONG(browser_layer_sound);
-    break;
-	default:
-	  break;
-	}
-#endif
-  return state;
 }

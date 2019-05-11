@@ -4,7 +4,3 @@
 #define MATRIX_ROW_PINS { B6 }
 
 #define TAP_CODE_DELAY 10 // increase to 10 to make encoder work with KC_VOLU
-
-#ifdef AUDIO_ENABLE
-  #define STARTUP_SONG SONG(STARTUP_SOUND)
-#endif
