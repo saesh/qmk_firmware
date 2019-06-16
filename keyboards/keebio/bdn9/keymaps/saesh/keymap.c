@@ -23,6 +23,7 @@
 #define MEDIA    0
 #define SETTINGS 1
 #define BROWSER  2
+#define DIABLO   3
 
 // tap dance commands
 #define CLOSE_TAB C(KC_W)
@@ -50,14 +51,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
            KC_MPRV,      KC_MPLY,     KC_MNXT \
     ),
     [SETTINGS] = LAYOUT(
-          RESET, _______,     _______, \
-        _______, _______,     _______, \
-        _______, _______, TG(BROWSER) \
+          RESET,    _______,    _______, \
+        _______,    _______,    _______, \
+        _______, TG(DIABLO), TG(BROWSER) \
     ),
     [BROWSER] = LAYOUT(
          _______,         TO(MEDIA),  _______, \
         PREV_TAB,            RELOAD, NEXT_TAB, \
          NETWORK, TD(TD_CLOSE_UNDO),  NEW_TAB \
+    ),
+    [DIABLO] = LAYOUT(
+         _______, TO(MEDIA),  _______, \
+               1,         2,        3, \
+           KC_SPACE,   KC_Q,        4 \
     )
 };
 
