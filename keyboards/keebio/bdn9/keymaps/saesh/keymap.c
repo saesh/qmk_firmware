@@ -61,9 +61,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
          NETWORK, TD(TD_CLOSE_UNDO),  NEW_TAB \
     ),
     [DIABLO] = LAYOUT(
-         _______, TO(MEDIA),  _______, \
-               1,         2,        3, \
-           KC_SPACE,   KC_Q,        4 \
+                    KC_I, TO(MEDIA),  _______, \
+                    KC_1,      KC_2,     KC_3, \
+        LSFT_T(KC_SPACE),      KC_Q,     KC_4 \
     )
 };
 
