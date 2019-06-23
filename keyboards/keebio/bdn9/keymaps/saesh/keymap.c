@@ -35,6 +35,40 @@
 #define PREV_TAB C(KC_PGUP)
 #define NETWORK C(LSFT(KC_E))
 
+#define E1M1_DOOM  \
+    Q__NOTE(_E3 ), \
+    Q__NOTE(_E3 ), \
+    Q__NOTE(_E4 ), \
+    Q__NOTE(_E3 ), \
+    Q__NOTE(_E3 ), \
+    Q__NOTE(_D4 ), \
+    Q__NOTE(_E3 ), \
+    Q__NOTE(_E3 ), \
+    Q__NOTE(_C4 ), \
+    Q__NOTE(_E3 ), \
+    Q__NOTE(_E3 ), \
+    Q__NOTE(_BF3), \
+    Q__NOTE(_E3 ), \
+    Q__NOTE(_E3 ), \
+    Q__NOTE(_B3 ), \
+    Q__NOTE(_C4 ), \
+    Q__NOTE(_E3 ), \
+    Q__NOTE(_E3 ), \
+    Q__NOTE(_E4 ), \
+    Q__NOTE(_E3 ), \
+    Q__NOTE(_E3 ), \
+    Q__NOTE(_D4 ), \
+    Q__NOTE(_E3 ), \
+    Q__NOTE(_E3 ), \
+    Q__NOTE(_C4 ), \
+    Q__NOTE(_E3 ), \
+    Q__NOTE(_E3 ), \
+    H__NOTE(_BF3),
+
+float e1m1_doom_song[][2] = SONG(QWERTY_SOUND);
+float plank_sound[][2] = SONG(PLANCK_SOUND);
+float qwerty_sound[][2] = SONG(QWERTY_SOUND);
+
 // tap dance definitions
 enum {
   TD_CLOSE_UNDO = 0
@@ -51,19 +85,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
            KC_MPRV,      KC_MPLY,     KC_MNXT \
     ),
     [SETTINGS] = LAYOUT(
-          RESET,    _______,    _______, \
-        _______,    _______,    _______, \
+          RESET,    _______,     _______, \
+        _______,    _______,     _______, \
         _______, TG(DIABLO), TG(BROWSER) \
     ),
     [BROWSER] = LAYOUT(
-         _______,         TO(MEDIA),  _______, \
-        PREV_TAB,            RELOAD, NEXT_TAB, \
-         NETWORK, TD(TD_CLOSE_UNDO),  NEW_TAB \
+         _______,         TO(SETTINGS), _______, \
+        PREV_TAB,            RELOAD,   NEXT_TAB, \
+         NETWORK, TD(TD_CLOSE_UNDO),    NEW_TAB \
     ),
     [DIABLO] = LAYOUT(
-                    KC_I, TO(MEDIA),  _______, \
-                    KC_1,      KC_2,     KC_3, \
-        LSFT_T(KC_SPACE),      KC_Q,     KC_4 \
+                    KC_I, TO(SETTINGS),  _______, \
+                    KC_1,         KC_2,     KC_3, \
+        LSFT_T(KC_SPACE),         KC_Q,     KC_4 \
     )
 };
 
@@ -83,3 +117,21 @@ void encoder_update_user(uint8_t index, bool clockwise) {
         }
     }
 }
+
+uint32_t layer_state_set_user(uint32_t state) {
+    switch (biton32(state)) {
+    case MEDIA:
+        PLAY_SONG(qwerty_sound);
+        break;
+    case DIABLO:
+        PLAY_SONG(e1m1_doom_song);
+        break;
+    case  BROWSER:
+        PLAY_SONG(plank_sound);
+        break;
+    default:
+        break;
+    }
+  return state;
+}
+
