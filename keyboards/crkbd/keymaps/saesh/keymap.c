@@ -35,10 +35,6 @@ enum custom_keycodes {
   RGBRST
 };
 
-enum macro_keycodes {
-  KC_SAMPLEMACRO,
-};
-
 #define KC______ KC_TRNS
 #define KC_XXXXX KC_NO
 #define KC_LOWER LOWER
@@ -54,53 +50,55 @@ enum macro_keycodes {
 #define KC_LVAD  RGB_VAD
 #define KC_LMOD  RGB_MOD
 #define KC_CTLTB CTL_T(KC_TAB)
+#define KC_SWAG MAGIC_SWAP_LALT_LGUI
+#define KC_NOAG MAGIC_UNSWAP_ALT_GUI
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  [_QWERTY] = LAYOUT_kc( \
+  [_QWERTY] = LAYOUT_kc(
   //,-----------------------------------------.                ,-----------------------------------------.
         ESC,     Q,     W,     E,     R,     T,                      Y,     U,     I,     O,     P,  BSPC,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
       CTLTB,     A,     S,     D,     F,     G,                      H,     J,     K,     L,  SCLN,  QUOT,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LSFT,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH,  RSFT,\
+       LWIN,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH,  RSFT,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                   LALT, LOWER, SPACE,    ENTER, RAISE, RALT \
+                                   LALT, LOWER, SPACE,    ENTER, RAISE,  RALT
                               //`--------------------'  `--------------------'
   ),
 
-  [_LOWER] = LAYOUT_kc( \
+  [_LOWER] = LAYOUT_kc(
   //,-----------------------------------------.                ,-----------------------------------------.
-        ESC,     1,     2,     3,     4,     5,                    INS,  HOME,    UP,   END, XXXXX,  BSPC,\
+        ESC, XXXXX, XXXXX, XXXXX, XXXXX,  LBRC,                   RBRC,     7,     8,     9,   INS,   DEL,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      CTLTB,     6,     7,     8,     9,     0,                   PGUP,  LEFT,  DOWN, RIGHT, XXXXX, XXXXX,\
+      XXXXX, XXXXX, XXXXX, XXXXX,   EQL,  LPRN,                   RPRN,     4,     5,     6,  HOME,   END,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LSFT,   F11,   F12,   F13,   F14,   F15,                   PGDN,   DEL, XXXXX, XXXXX, XXXXX, XXXXX,\
+       LWIN, XXXXX, XXXXX, XXXXX, XXXXX,  LCBR,                   RCBR,     1,     2,     3, XXXXX, XXXXX,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                   LALT, LOWER, SPACE,    ENTER, RAISE, RALT \
+                                   LALT, LOWER, SPACE,    ENTER, RAISE,     0
                               //`--------------------'  `--------------------'
   ),
 
-  [_RAISE] = LAYOUT_kc( \
+  [_RAISE] = LAYOUT_kc(
   //,-----------------------------------------.                ,-----------------------------------------.
-        ESC,  EXLM,    AT,  HASH,   DLR,  PERC,                   CIRC,  AMPR,  ASTR,  LPRN,  RPRN,  BSPC,\
+        ESC,  EXLM,    AT,  HASH,   DLR,  PERC,                   CIRC,  AMPR,  ASTR,  LPRN,  RPRN,  MINS,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      CTLTB,    F1,    F2,    F3,    F4,    F5,                   MINS,   EQL,  LCBR,  RCBR,  PIPE,   GRV,\
+      XXXXX,    F1,    F2,    F3,    F4,    F5,                   LEFT,  DOWN,    UP, RIGHT,  PIPE,   GRV,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LSFT,    F6,    F7,    F8,    F9,   F10,                   UNDS,  PLUS,  LBRC,  RBRC,  BSLS,  TILD,\
+       LWIN,    F6,    F7,    F8,    F9,   F10,                   UNDS,  PLUS,  LBRC,  RBRC,  BSLS,  TILD,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                   LALT, LOWER, SPACE,    ENTER, RAISE, RALT \
+                                   LALT, LOWER, SPACE,    ENTER, RAISE,  RALT
                               //`--------------------'  `--------------------'
   ),
 
-  [_ADJUST] = LAYOUT_kc( \
+  [_ADJUST] = LAYOUT_kc(
   //,-----------------------------------------.                ,-----------------------------------------.
-        RST,  LRST, XXXXX, XXXXX, XXXXX, XXXXX,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,\
+        RST,  LRST,  SWAG,  NOAG, XXXXX, XXXXX,                   MPRV,  MNXT,  MFFD,  MRWD,  MPLY, XXXXX,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LTOG,  LHUI,  LSAI,  LVAI, XXXXX, XXXXX,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LMOD,  LHUD,  LSAD,  LVAD, XXXXX, XXXXX,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,\
+       LMOD,  LHUD,  LSAD,  LVAD, XXXXX, XXXXX,                  XXXXX, XXXXX,  VOLD,  VOLU,  MUTE, XXXXX,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                   LALT, LOWER, SPACE,    ENTER, RAISE, RALT \
+                                   LALT, LOWER, SPACE,    ENTER, RAISE,  RALT
                               //`--------------------'  `--------------------'
   )
 };
@@ -141,7 +139,7 @@ void set_keylog(uint16_t keycode, keyrecord_t *record);
 const char *read_keylog(void);
 const char *read_keylogs(void);
 
-// const char *read_mode_icon(bool swap);
+const char *read_mode_icon(bool swap);
 // const char *read_host_led_state(void);
 // void set_timelog(void);
 // const char *read_timelog(void);
@@ -156,7 +154,7 @@ void matrix_render_user(struct CharacterMatrix *matrix) {
     matrix_write_ln(matrix, read_layer_state());
     matrix_write_ln(matrix, read_keylog());
     matrix_write_ln(matrix, read_keylogs());
-    //matrix_write_ln(matrix, read_mode_icon(keymap_config.swap_lalt_lgui));
+    matrix_write_ln(matrix, read_mode_icon(keymap_config.swap_lalt_lgui));
     //matrix_write_ln(matrix, read_host_led_state());
     //matrix_write_ln(matrix, read_timelog());
   } else {
