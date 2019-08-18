@@ -35,6 +35,15 @@ enum custom_keycodes {
   RGBRST
 };
 
+enum {
+  ESCCLO = 0
+};
+
+qk_tap_dance_action_t tap_dance_actions[] = {
+  //Tap once for Esc, twice for i3 MOD+Shift=Q
+  [ESCCLO]  = ACTION_TAP_DANCE_DOUBLE(KC_ESC, SGUI(KC_Q))
+};
+
 #define KC______ KC_TRNS
 #define KC_XXXXX KC_NO
 #define KC_LOWER LOWER
@@ -52,11 +61,12 @@ enum custom_keycodes {
 #define KC_CTLTB CTL_T(KC_TAB)
 #define KC_SWAG MAGIC_SWAP_LALT_LGUI
 #define KC_NOAG MAGIC_UNSWAP_ALT_GUI
+#define KC_TD(x) TD(x)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_QWERTY] = LAYOUT_kc(
   //,-----------------------------------------.                ,-----------------------------------------.
-        ESC,     Q,     W,     E,     R,     T,                      Y,     U,     I,     O,     P,  BSPC,\
+  TD(ESCCLO),     Q,     W,     E,     R,     T,                      Y,     U,     I,     O,     P,  BSPC,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
       CTLTB,     A,     S,     D,     F,     G,                      H,     J,     K,     L,  SCLN,  QUOT,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
@@ -68,7 +78,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_LOWER] = LAYOUT_kc(
   //,-----------------------------------------.                ,-----------------------------------------.
-        ESC, XXXXX, XXXXX, XXXXX, XXXXX,  LBRC,                   RBRC,     7,     8,     9,   INS,   DEL,\
+  TD(ESCCLO), XXXXX, XXXXX, XXXXX, XXXXX,  LBRC,                   RBRC,     7,     8,     9,   INS,   DEL,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
       CTLTB, XXXXX, XXXXX, XXXXX,   EQL,  LPRN,                   RPRN,     4,     5,     6,  HOME,   END,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
@@ -80,7 +90,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_RAISE] = LAYOUT_kc(
   //,-----------------------------------------.                ,-----------------------------------------.
-        ESC,  EXLM,    AT,  HASH,   DLR,  PERC,                   CIRC,  AMPR,  ASTR,  LPRN,  RPRN,  MINS,\
+  TD(ESCCLO),  EXLM,    AT,  HASH,   DLR,  PERC,                   CIRC,  AMPR,  ASTR,  LPRN,  RPRN,  MINS,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
       CTLTB,    F1,    F2,    F3,    F4,    F5,                   LEFT,  DOWN,    UP, RIGHT,  PIPE,   GRV,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
