@@ -36,12 +36,14 @@ enum custom_keycodes {
 };
 
 enum {
-  ESCCLO = 0
+  ESCCLO = 0,
+  GRVTIL = 1,
 };
 
 qk_tap_dance_action_t tap_dance_actions[] = {
   //Tap once for Esc, twice for i3 MOD+Shift=Q
-  [ESCCLO]  = ACTION_TAP_DANCE_DOUBLE(KC_ESC, SGUI(KC_Q))
+  [ESCCLO] = ACTION_TAP_DANCE_DOUBLE(KC_ESC, SGUI(KC_Q)),
+  [GRVTIL] = ACTION_TAP_DANCE_DOUBLE(KC_GRV, KC_TILD)
 };
 
 #define KC______ KC_TRNS
@@ -59,18 +61,18 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define KC_LVAD  RGB_VAD
 #define KC_LMOD  RGB_MOD
 #define KC_CTLTB CTL_T(KC_TAB)
-#define KC_SWAG MAGIC_SWAP_LALT_LGUI
-#define KC_NOAG MAGIC_UNSWAP_ALT_GUI
 #define KC_TD(x) TD(x)
+#define KC_G(x) G(x)
+#define KC_MOV(x) SGUI(x) // Move to workspace, MOD+Shift+Number
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_QWERTY] = LAYOUT_kc(
   //,-----------------------------------------.                ,-----------------------------------------.
-  TD(ESCCLO),     Q,     W,     E,     R,     T,                      Y,     U,     I,     O,     P,  BSPC,\
+  TD(ESCCLO),    Q,     W,     E,     R,     T,                      Y,     U,     I,     O,     P,  BSPC,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
       CTLTB,     A,     S,     D,     F,     G,                      H,     J,     K,     L,  SCLN,  QUOT,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LWIN,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH,  RSFT,\
+       LGUI,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH,  RSFT,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
                                    LALT, LOWER, SPACE,    ENTER, RAISE,  RALT
                               //`--------------------'  `--------------------'
@@ -78,11 +80,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_LOWER] = LAYOUT_kc(
   //,-----------------------------------------.                ,-----------------------------------------.
-  TD(ESCCLO), XXXXX, XXXXX, XXXXX, XXXXX,  LBRC,                   RBRC,     7,     8,     9,   INS,   DEL,\
+ TD(GRVTIL), XXXXX, XXXXX, XXXXX, XXXXX,  LBRC,                   RBRC,     7,     8,     9,   INS,   DEL,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      CTLTB, XXXXX, XXXXX, XXXXX,   EQL,  LPRN,                   RPRN,     4,     5,     6,  HOME,   END,\
+      CTLTB, XXXXX, XXXXX, XXXXX,   EQL,  LPRN,                   RPRN,     4,     5,     6,G(KC_LEFT),G(KC_RIGHT),\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LWIN, XXXXX, XXXXX, XXXXX, XXXXX,  LCBR,                   RCBR,     1,     2,     3,  PGDN,  PGUP,\
+       LGUI, XXXXX, XXXXX, XXXXX, XXXXX,  LCBR,                   RCBR,     1,     2,     3, XXXXX,  RSFT,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
                                    LALT, LOWER, SPACE,    ENTER, RAISE,     0
                               //`--------------------'  `--------------------'
@@ -90,11 +92,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_RAISE] = LAYOUT_kc(
   //,-----------------------------------------.                ,-----------------------------------------.
-  TD(ESCCLO),  EXLM,    AT,  HASH,   DLR,  PERC,                   CIRC,  AMPR,  ASTR,  LPRN,  RPRN,  MINS,\
+ TD(GRVTIL),  EXLM,    AT,  HASH,   DLR,  PERC,                   CIRC,  AMPR,  ASTR,  UNDS,  PLUS,  MINS,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      CTLTB,    F1,    F2,    F3,    F4,    F5,                   LEFT,  DOWN,    UP, RIGHT,  PIPE,   GRV,\
+      CTLTB,MOV(1),MOV(2),MOV(3),MOV(4), XXXXX,                   LEFT,  DOWN,    UP, RIGHT, XXXXX,  PIPE,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LWIN,    F6,    F7,    F8,    F9,   F10,                   UNDS,  PLUS,  LBRC,  RBRC,  BSLS,  TILD,\
+       LGUI, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                   HOME,  PGDN,  PGUP,   END,  BSLS,  RSFT,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
                                    LALT, LOWER, SPACE,    ENTER, RAISE,  RALT
                               //`--------------------'  `--------------------'
@@ -102,9 +104,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_ADJUST] = LAYOUT_kc(
   //,-----------------------------------------.                ,-----------------------------------------.
-        RST,  LRST,  SWAG,  NOAG, XXXXX, XXXXX,                   MPRV,  MNXT,  MFFD,  MRWD,  MPLY, XXXXX,\
+        RST,  LRST, XXXXX, XXXXX, XXXXX, XXXXX,                  XXXXX, XXXXX,  MRWD,  MFFD, XXXXX, XXXXX,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LTOG,  LHUI,  LSAI,  LVAI, XXXXX, XXXXX,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,\
+       LTOG,  LHUI,  LSAI,  LVAI, XXXXX, XXXXX,                  XXXXX,  MPLY,  MPRV,  MNXT, XXXXX, XXXXX,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LMOD,  LHUD,  LSAD,  LVAD, XXXXX, XXXXX,                  XXXXX, XXXXX,  VOLD,  VOLU,  MUTE, XXXXX,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
