@@ -70,9 +70,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------.                ,-----------------------------------------.
         ESC, XXXXX, XXXXX, XXXXX, XXXXX,  LBRC,                   RBRC,     7,     8,     9,   INS,   DEL,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      XXXXX, XXXXX, XXXXX, XXXXX,   EQL,  LPRN,                   RPRN,     4,     5,     6,  HOME,   END,\
+      CTLTB, XXXXX, XXXXX, XXXXX,   EQL,  LPRN,                   RPRN,     4,     5,     6,  HOME,   END,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LWIN, XXXXX, XXXXX, XXXXX, XXXXX,  LCBR,                   RCBR,     1,     2,     3, XXXXX, XXXXX,\
+       LWIN, XXXXX, XXXXX, XXXXX, XXXXX,  LCBR,                   RCBR,     1,     2,     3,  PGDN,  PGUP,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
                                    LALT, LOWER, SPACE,    ENTER, RAISE,     0
                               //`--------------------'  `--------------------'
@@ -82,7 +82,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------.                ,-----------------------------------------.
         ESC,  EXLM,    AT,  HASH,   DLR,  PERC,                   CIRC,  AMPR,  ASTR,  LPRN,  RPRN,  MINS,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      XXXXX,    F1,    F2,    F3,    F4,    F5,                   LEFT,  DOWN,    UP, RIGHT,  PIPE,   GRV,\
+      CTLTB,    F1,    F2,    F3,    F4,    F5,                   LEFT,  DOWN,    UP, RIGHT,  PIPE,   GRV,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LWIN,    F6,    F7,    F8,    F9,   F10,                   UNDS,  PLUS,  LBRC,  RBRC,  BSLS,  TILD,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
