@@ -64,29 +64,30 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define KC_TD(x) TD(x)
 #define KC_G(x) G(x)
 #define KC_MOV(x) SGUI(x) // Move window to workspace, MOD+Shift+Number
+#define KC_SGUI(x) SGUI(x)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_QWERTY] = LAYOUT_kc(
   //,-----------------------------------------.                ,-----------------------------------------.
-  TD(ESCCLO),    Q,     W,     E,     R,     T,                      Y,     U,     I,     O,     P,  BSPC,\
+        ESC,     Q,     W,     E,     R,     T,                      Y,     U,     I,     O,     P,  BSPC,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
       CTLTB,     A,     S,     D,     F,     G,                      H,     J,     K,     L,  SCLN,  QUOT,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LGUI,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH,  RSFT,\
+       LALT,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH,  RSFT,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                   LALT, LOWER, SPACE,    ENTER, RAISE,  RALT
+                                   LGUI, LOWER, SPACE,    ENTER, RAISE,  RALT
                               //`--------------------'  `--------------------'
   ),
 
   [_LOWER] = LAYOUT_kc(
   //,-----------------------------------------.                ,-----------------------------------------.
- TD(GRVTIL), XXXXX, XXXXX, XXXXX, XXXXX,  LBRC,                   RBRC,     7,     8,     9,   INS,   DEL,\
+ TD(GRVTIL), XXXXX, XXXXX, XXXXX,  MINS,  LBRC,                   RBRC,     7,     8,     9,   INS,   DEL,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
       CTLTB, XXXXX, XXXXX, XXXXX,   EQL,  LPRN,                   RPRN,     4,     5,     6,G(C(KC_LEFT)),G(C(KC_RIGHT)),\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LGUI, XXXXX, XXXXX, XXXXX, XXXXX,  LCBR,                   RCBR,     1,     2,     3, XXXXX,  RSFT,\
+       LALT, XXXXX, XXXXX, XXXXX,  UNDS,  LCBR,                   RCBR,     1,     2,     3, XXXXX,  RSFT,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                   LALT, LOWER, SPACE,    ENTER, RAISE,     0
+                                   LGUI, LOWER, SPACE,    ENTER, RAISE,     0
                               //`--------------------'  `--------------------'
   ),
 
@@ -96,9 +97,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
       CTLTB,MOV(KC_1),MOV(KC_2),MOV(KC_3),MOV(KC_4), XXXXX,       LEFT,  DOWN,    UP, RIGHT, XXXXX,  PIPE,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LGUI, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                   HOME,  PGDN,  PGUP,   END,  BSLS,  RSFT,\
+       LALT, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                   HOME,  PGDN,  PGUP,   END,  BSLS,  RSFT,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                   LALT, LOWER, SPACE,    ENTER, RAISE,  RALT
+                                   LGUI, LOWER, SPACE,    ENTER, RAISE, SGUI(KC_Q)
                               //`--------------------'  `--------------------'
   ),
 
