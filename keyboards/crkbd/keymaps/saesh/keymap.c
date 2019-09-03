@@ -63,7 +63,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define KC_CTLTB CTL_T(KC_TAB)
 #define KC_TD(x) TD(x)
 #define KC_G(x) G(x)
-#define KC_MOV(x) SGUI(x) // Move to workspace, MOD+Shift+Number
+#define KC_MOV(x) SGUI(x) // Move window to workspace, MOD+Shift+Number
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_QWERTY] = LAYOUT_kc(
@@ -82,7 +82,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------.                ,-----------------------------------------.
  TD(GRVTIL), XXXXX, XXXXX, XXXXX, XXXXX,  LBRC,                   RBRC,     7,     8,     9,   INS,   DEL,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      CTLTB, XXXXX, XXXXX, XXXXX,   EQL,  LPRN,                   RPRN,     4,     5,     6,G(KC_LEFT),G(KC_RIGHT),\
+      CTLTB, XXXXX, XXXXX, XXXXX,   EQL,  LPRN,                   RPRN,     4,     5,     6,G(C(KC_LEFT)),G(C(KC_RIGHT)),\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LGUI, XXXXX, XXXXX, XXXXX, XXXXX,  LCBR,                   RCBR,     1,     2,     3, XXXXX,  RSFT,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
@@ -94,7 +94,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------.                ,-----------------------------------------.
  TD(GRVTIL),  EXLM,    AT,  HASH,   DLR,  PERC,                   CIRC,  AMPR,  ASTR,  UNDS,  PLUS,  MINS,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      CTLTB,MOV(1),MOV(2),MOV(3),MOV(4), XXXXX,                   LEFT,  DOWN,    UP, RIGHT, XXXXX,  PIPE,\
+      CTLTB,MOV(KC_1),MOV(KC_2),MOV(KC_3),MOV(KC_4), XXXXX,       LEFT,  DOWN,    UP, RIGHT, XXXXX,  PIPE,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LGUI, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                   HOME,  PGDN,  PGUP,   END,  BSLS,  RSFT,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
