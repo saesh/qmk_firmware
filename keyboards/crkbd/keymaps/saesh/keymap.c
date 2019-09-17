@@ -32,7 +32,8 @@ enum custom_keycodes {
   RAISE,
   ADJUST,
   BACKLIT,
-  RGBRST
+  RGBRST,
+  EPRM
 };
 
 enum {
@@ -51,6 +52,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define KC_LOWER LOWER
 #define KC_RAISE RAISE
 #define KC_RST   RESET
+#define KC_EPRM  EPRM
 #define KC_LRST  RGBRST
 #define KC_LTOG  RGB_TOG
 #define KC_LHUI  RGB_HUI
@@ -105,7 +107,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_ADJUST] = LAYOUT_kc(
   //,-----------------------------------------.                ,-----------------------------------------.
-        RST,  LRST, XXXXX, XXXXX, XXXXX, XXXXX,                  XXXXX, XXXXX,  MRWD,  MFFD, XXXXX, XXXXX,\
+        RST,  LRST,  EPRM, XXXXX, XXXXX, XXXXX,                  XXXXX, XXXXX,  MRWD,  MFFD, XXXXX, XXXXX,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LTOG,  LHUI,  LSAI,  LVAI, XXXXX, XXXXX,                  XXXXX,  MPLY,  MPRV,  MNXT, XXXXX, XXXXX,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
@@ -233,16 +235,22 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         return false;
         break;
-    case RGB_MOD:
-      #ifdef RGBLIGHT_ENABLE
+     case EPRM:
         if (record->event.pressed) {
-          rgblight_mode(RGB_current_mode);
-          rgblight_step();
-          RGB_current_mode = rgblight_config.mode;
+            eeconfig_init();
         }
-      #endif
-      return false;
-      break;
+        return false;
+        break;
+    // case RGB_MOD:
+    //   #ifdef RGBLIGHT_ENABLE
+    //     if (record->event.pressed) {
+    //       rgblight_mode(RGB_current_mode);
+    //       rgblight_step();
+    //       RGB_current_mode = rgblight_config.mode;
+    //     }
+    //   #endif
+    //   return false;
+    //   break;
     case RGBRST:
       #ifdef RGBLIGHT_ENABLE
         if (record->event.pressed) {
@@ -255,3 +263,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
   return true;
 }
+
+#ifdef RGB_MATRIX_ENABLE
+
+void suspend_power_down_keymap(void) {
+    rgb_matrix_set_suspend_state(true);
+}
+
+void suspend_wakeup_init_keymap(void) {
+    rgb_matrix_set_suspend_state(false);
+}
+
+#endif
