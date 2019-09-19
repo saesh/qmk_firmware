@@ -4,23 +4,7 @@
   #include "lufa.h"
   #include "split_util.h"
 #endif
-#ifdef SSD1306OLED
-  #include "ssd1306.h"
-#endif
 
-extern keymap_config_t keymap_config;
-
-#ifdef RGBLIGHT_ENABLE
-//Following line allows macro to read current RGB settings
-extern rgblight_config_t rgblight_config;
-#endif
-
-extern uint8_t is_master;
-
-// Each layer gets a name for readability, which is then used in the keymap matrix below.
-// The underscores don't mean anything - you can have a layer called STUFF or any other name.
-// Layer names don't all need to be of the same length, obviously, and you can also skip them
-// entirely and just use numbers.
 #define _QWERTY 0
 #define _LOWER 1
 #define _RAISE 2
@@ -31,42 +15,46 @@ enum custom_keycodes {
   LOWER,
   RAISE,
   ADJUST,
-  BACKLIT,
-  RGBRST,
   EPRM
 };
 
 enum {
-  ESCCLO = 0,
-  GRVTIL = 1,
+  GRVTIL = 0,
 };
 
 qk_tap_dance_action_t tap_dance_actions[] = {
-  //Tap once for Esc, twice for i3 MOD+Shift=Q
-  [ESCCLO] = ACTION_TAP_DANCE_DOUBLE(KC_ESC, SGUI(KC_Q)),
   [GRVTIL] = ACTION_TAP_DANCE_DOUBLE(KC_GRV, KC_TILD)
 };
 
 #define KC______ KC_TRNS
 #define KC_XXXXX KC_NO
+
 #define KC_LOWER LOWER
 #define KC_RAISE RAISE
-#define KC_RST   RESET
-#define KC_EPRM  EPRM
-#define KC_LRST  RGBRST
+
+#define KC_RST   RESET          // Reset controller
+#define KC_EPRM  EPRM           // EPROM reset
+
 #define KC_LTOG  RGB_TOG
+#define KC_LMOD  RGB_MOD
 #define KC_LHUI  RGB_HUI
 #define KC_LHUD  RGB_HUD
 #define KC_LSAI  RGB_SAI
 #define KC_LSAD  RGB_SAD
 #define KC_LVAI  RGB_VAI
 #define KC_LVAD  RGB_VAD
-#define KC_LMOD  RGB_MOD
-#define KC_CTLTB CTL_T(KC_TAB)
-#define KC_TD(x) TD(x)
-#define KC_G(x) G(x)
-#define KC_MOV(x) SGUI(x) // Move window to workspace, MOD+Shift+Number
-#define KC_SGUI(x) SGUI(x)
+#define KC_LSPI  RGB_SPI
+#define KC_LSPD  RGB_SPD
+
+#define KC_CTLTB CTL_T(KC_TAB)  // Ctrl+Tab
+#define KC_TD(x) TD(x)          // Tap Dance
+#define KC_G(x) G(x)            // GUI
+#define KC_SGUI(x) SGUI(x)      // Shift+Gui
+
+#define KC_M1 SGUI(KC_1)        // Move to first workspace
+#define KC_M2 SGUI(KC_2)
+#define KC_M3 SGUI(KC_3)
+#define KC_M4 SGUI(KC_4)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_QWERTY] = LAYOUT_kc(
@@ -97,7 +85,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------.                ,-----------------------------------------.
  TD(GRVTIL),  EXLM,    AT,  HASH,   DLR,  PERC,                   CIRC,  AMPR,  ASTR,  UNDS,  PLUS,  MINS,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      CTLTB,MOV(KC_1),MOV(KC_2),MOV(KC_3),MOV(KC_4), XXXXX,       LEFT,  DOWN,    UP, RIGHT, XXXXX,  PIPE,\
+      CTLTB,     M1,   M2,    M3,    M4, XXXXX,                   LEFT,  DOWN,    UP, RIGHT, XXXXX,  PIPE,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LALT, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                   HOME,  PGDN,  PGUP,   END,  BSLS,  RSFT,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
@@ -107,98 +95,27 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_ADJUST] = LAYOUT_kc(
   //,-----------------------------------------.                ,-----------------------------------------.
-        RST,  LRST,  EPRM, XXXXX, XXXXX, XXXXX,                  XXXXX, XXXXX,  MRWD,  MFFD, XXXXX, XXXXX,\
+      XXXXX, XXXXX, XXXXX,  EPRM, XXXXX,   RST,                  XXXXX, XXXXX,  MRWD,  MFFD, XXXXX, XXXXX,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LTOG,  LHUI,  LSAI,  LVAI, XXXXX, XXXXX,                  XXXXX,  MPLY,  MPRV,  MNXT, XXXXX, XXXXX,\
+       LTOG,  LHUI,  LSAI,  LVAI,  LSPI, XXXXX,                  XXXXX,  MPLY,  MPRV,  MNXT, XXXXX, XXXXX,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LMOD,  LHUD,  LSAD,  LVAD, XXXXX, XXXXX,                  XXXXX, XXXXX,  VOLD,  VOLU,  MUTE, XXXXX,\
+       LMOD,  LHUD,  LSAD,  LVAD,  LSPD, XXXXX,                  XXXXX, XXXXX,  VOLD,  VOLU,  MUTE, XXXXX,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
                                    LALT, LOWER, SPACE,    ENTER, RAISE,  RALT
                               //`--------------------'  `--------------------'
   )
 };
 
-int RGB_current_mode;
-
 void persistent_default_layer_set(uint16_t default_layer) {
   eeconfig_update_default_layer(default_layer);
   default_layer_set(default_layer);
 }
 
-// Setting ADJUST layer RGB back to default
-void update_tri_layer_RGB(uint8_t layer1, uint8_t layer2, uint8_t layer3) {
-  if (IS_LAYER_ON(layer1) && IS_LAYER_ON(layer2)) {
-    layer_on(layer3);
-  } else {
-    layer_off(layer3);
-  }
-}
-
 void matrix_init_user(void) {
-    #ifdef RGBLIGHT_ENABLE
-      RGB_current_mode = rgblight_config.mode;
-    #endif
-    //SSD1306 OLED init, make sure to add #define SSD1306OLED in config.h
-    #ifdef SSD1306OLED
-        iota_gfx_init(!has_usb());   // turns on the display
-    #endif
+
 }
-
-//SSD1306 OLED update loop, make sure to add #define SSD1306OLED in config.h
-#ifdef SSD1306OLED
-
-// When add source files to SRC in rules.mk, you can use functions.
-const char *read_layer_state(void);
-const char *read_logo(void);
-void set_keylog(uint16_t keycode, keyrecord_t *record);
-const char *read_keylog(void);
-const char *read_keylogs(void);
-
-const char *read_mode_icon(bool swap);
-// const char *read_host_led_state(void);
-// void set_timelog(void);
-// const char *read_timelog(void);
-
-void matrix_scan_user(void) {
-   iota_gfx_task();
-}
-
-void matrix_render_user(struct CharacterMatrix *matrix) {
-  if (is_master) {
-    // If you want to change the display of OLED, you need to change here
-    matrix_write_ln(matrix, read_layer_state());
-    matrix_write_ln(matrix, read_keylog());
-    matrix_write_ln(matrix, read_keylogs());
-    matrix_write_ln(matrix, read_mode_icon(keymap_config.swap_lalt_lgui));
-    //matrix_write_ln(matrix, read_host_led_state());
-    //matrix_write_ln(matrix, read_timelog());
-  } else {
-    matrix_write(matrix, read_logo());
-  }
-}
-
-void matrix_update(struct CharacterMatrix *dest, const struct CharacterMatrix *source) {
-  if (memcmp(dest->display, source->display, sizeof(dest->display))) {
-    memcpy(dest->display, source->display, sizeof(dest->display));
-    dest->dirty = true;
-  }
-}
-
-void iota_gfx_task_user(void) {
-  struct CharacterMatrix matrix;
-  matrix_clear(&matrix);
-  matrix_render_user(&matrix);
-  matrix_update(&display, &matrix);
-}
-#endif//SSD1306OLED
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  if (record->event.pressed) {
-#ifdef SSD1306OLED
-    set_keylog(keycode, record);
-#endif
-    // set_timelog();
-  }
 
   switch (keycode) {
     case QWERTY:
@@ -210,20 +127,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case LOWER:
       if (record->event.pressed) {
         layer_on(_LOWER);
-        update_tri_layer_RGB(_LOWER, _RAISE, _ADJUST);
+        update_tri_layer(_LOWER, _RAISE, _ADJUST);
       } else {
         layer_off(_LOWER);
-        update_tri_layer_RGB(_LOWER, _RAISE, _ADJUST);
+        update_tri_layer(_LOWER, _RAISE, _ADJUST);
       }
       return false;
       break;
     case RAISE:
       if (record->event.pressed) {
         layer_on(_RAISE);
-        update_tri_layer_RGB(_LOWER, _RAISE, _ADJUST);
+        update_tri_layer(_LOWER, _RAISE, _ADJUST);
       } else {
         layer_off(_RAISE);
-        update_tri_layer_RGB(_LOWER, _RAISE, _ADJUST);
+        update_tri_layer(_LOWER, _RAISE, _ADJUST);
       }
       return false;
       break;
@@ -241,36 +158,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         return false;
         break;
-    // case RGB_MOD:
-    //   #ifdef RGBLIGHT_ENABLE
-    //     if (record->event.pressed) {
-    //       rgblight_mode(RGB_current_mode);
-    //       rgblight_step();
-    //       RGB_current_mode = rgblight_config.mode;
-    //     }
-    //   #endif
-    //   return false;
-    //   break;
-    case RGBRST:
-      #ifdef RGBLIGHT_ENABLE
-        if (record->event.pressed) {
-          eeconfig_update_rgblight_default();
-          rgblight_enable();
-          RGB_current_mode = rgblight_config.mode;
-        }
-      #endif
-      break;
   }
   return true;
 }
 
 #ifdef RGB_MATRIX_ENABLE
 
-void suspend_power_down_keymap(void) {
+void suspend_power_down_user(void) {
     rgb_matrix_set_suspend_state(true);
 }
 
-void suspend_wakeup_init_keymap(void) {
+void suspend_wakeup_init_user(void) {
     rgb_matrix_set_suspend_state(false);
 }
 
