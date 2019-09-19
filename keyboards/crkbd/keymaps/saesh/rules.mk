@@ -32,5 +32,5 @@ SLEEP_LED_ENABLE = no    # Breathing sleep LED during USB suspend
         #./lib/host_led_state_reader.c \
         #./lib/timelogger.c \
 
-# Change to yes if flashing right side for RBG matric effects
-RGB_MATRIX_SPLIT_RIGHT=no
+# Change to yes in docker_build.sh if flashing right side
+#RGB_MATRIX_SPLIT_RIGHT=no
