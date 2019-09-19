@@ -55,6 +55,8 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define KC_M2 SGUI(KC_2)
 #define KC_M3 SGUI(KC_3)
 #define KC_M4 SGUI(KC_4)
+#define KC_WSL G(C(KC_LEFT))    // Cycle to workspace left
+#define KC_WSR G(C(KC_RIGHT))   // Cycle to workspace right
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_QWERTY] = LAYOUT_kc(
@@ -73,7 +75,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------.                ,-----------------------------------------.
  TD(GRVTIL), XXXXX, XXXXX, XXXXX,  MINS,  LBRC,                   RBRC,     7,     8,     9,   INS,   DEL,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      CTLTB, XXXXX, XXXXX, XXXXX,   EQL,  LPRN,                   RPRN,     4,     5,     6,G(C(KC_LEFT)),G(C(KC_RIGHT)),\
+      CTLTB, XXXXX, XXXXX, XXXXX,   EQL,  LPRN,                   RPRN,     4,     5,     6,   WSL,   WSR,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LALT, XXXXX, XXXXX, XXXXX,  UNDS,  LCBR,                   RCBR,     1,     2,     3, XXXXX,  RSFT,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
