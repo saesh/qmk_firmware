@@ -1,30 +1,9 @@
 #include QMK_KEYBOARD_H
-#include "bootloader.h"
-#ifdef PROTOCOL_LUFA
-  #include "lufa.h"
-  #include "split_util.h"
-#endif
 
 #define _QWERTY 0
-#define _LOWER 1
-#define _RAISE 2
+#define _LOWER  1
+#define _RAISE  2
 #define _ADJUST 3
-
-enum custom_keycodes {
-  QWERTY = SAFE_RANGE,
-  LOWER,
-  RAISE,
-  ADJUST,
-  EPRM
-};
-
-enum {
-  GRVTIL = 0,
-};
-
-qk_tap_dance_action_t tap_dance_actions[] = {
-  [GRVTIL] = ACTION_TAP_DANCE_DOUBLE(KC_GRV, KC_TILD)
-};
 
 #define KC______ KC_TRNS
 #define KC_XXXXX KC_NO
@@ -57,6 +36,24 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define KC_M4 SGUI(KC_4)
 #define KC_WSL G(C(KC_LEFT))    // Cycle to workspace left
 #define KC_WSR G(C(KC_RIGHT))   // Cycle to workspace right
+
+extern uint8_t is_master;
+
+enum custom_keycodes {
+  QWERTY = SAFE_RANGE,
+  LOWER,
+  RAISE,
+  ADJUST,
+  EPRM
+};
+
+enum {
+  GRVTIL = 0,
+};
+
+qk_tap_dance_action_t tap_dance_actions[] = {
+  [GRVTIL] = ACTION_TAP_DANCE_DOUBLE(KC_GRV, KC_TILD)
+};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_QWERTY] = LAYOUT_kc(
@@ -108,13 +105,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   )
 };
 
+void matrix_init_user(void) {
+    #ifdef SSD1306OLED
+        // turns on the display
+        iota_gfx_init(!has_usb());
+    #endif
+}
+
+void matrix_scan_user(void) {
+    #ifdef SSD1306OLED
+        // update display continously
+        iota_gfx_task();
+    #endif
+}
+
 void persistent_default_layer_set(uint16_t default_layer) {
   eeconfig_update_default_layer(default_layer);
   default_layer_set(default_layer);
-}
-
-void matrix_init_user(void) {
-
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -164,14 +171,38 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   return true;
 }
 
-#ifdef RGB_MATRIX_ENABLE
-
 void suspend_power_down_user(void) {
+#ifdef RGB_MATRIX_ENABLE
     rgb_matrix_set_suspend_state(true);
+#endif
 }
 
 void suspend_wakeup_init_user(void) {
+#ifdef RGB_MATRIX_ENABLE
     rgb_matrix_set_suspend_state(false);
+#endif
 }
 
+#ifdef SSD1306OLED
+const char *read_layer_state(void);
+
+void matrix_render_user(struct CharacterMatrix *matrix) {
+  if (is_master) {
+    matrix_write_ln(matrix, read_layer_state());
+  }
+}
+
+void matrix_update(struct CharacterMatrix *dest, const struct CharacterMatrix *source) {
+  if (memcmp(dest->display, source->display, sizeof(dest->display))) {
+    memcpy(dest->display, source->display, sizeof(dest->display));
+    dest->dirty = true;
+  }
+}
+
+void iota_gfx_task_user(void) {
+  struct CharacterMatrix matrix;
+  matrix_clear(&matrix);
+  matrix_render_user(&matrix);
+  matrix_update(&display, &matrix);
+}
 #endif
