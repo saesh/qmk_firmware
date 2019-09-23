@@ -12,7 +12,7 @@
 #define KC_RAISE RAISE
 
 #define KC_RST   RESET          // Reset controller
-#define KC_EPRM  EPRM           // EPROM reset
+#define KC_ERMR  EEP_RST        // EEPROM reset
 
 #define KC_LTOG  RGB_TOG
 #define KC_LMOD  RGB_MOD
@@ -26,9 +26,9 @@
 #define KC_LSPD  RGB_SPD
 
 #define KC_CTLTB CTL_T(KC_TAB)  // Ctrl+Tab
-#define KC_TD(x) TD(x)          // Tap Dance
 #define KC_G(x) G(x)            // GUI
-#define KC_SGUI(x) SGUI(x)      // Shift+Gui
+#define KC_QUIT SGUI(KC_Q)   // i3 exit program
+#define KC_GESC GRAVE_ESC       // Grace Esc
 
 #define KC_M1 SGUI(KC_1)        // Move to first workspace
 #define KC_M2 SGUI(KC_2)
@@ -37,32 +37,24 @@
 #define KC_WSL G(C(KC_LEFT))    // Cycle to workspace left
 #define KC_WSR G(C(KC_RIGHT))   // Cycle to workspace right
 
+
 extern uint8_t is_master;
 
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,
   LOWER,
   RAISE,
-  ADJUST,
-  EPRM
-};
-
-enum {
-  GRVTIL = 0,
-};
-
-qk_tap_dance_action_t tap_dance_actions[] = {
-  [GRVTIL] = ACTION_TAP_DANCE_DOUBLE(KC_GRV, KC_TILD)
+  ADJUST
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_QWERTY] = LAYOUT_kc(
   //,-----------------------------------------.                ,-----------------------------------------.
-        ESC,     Q,     W,     E,     R,     T,                      Y,     U,     I,     O,     P,  BSPC,\
+       GESC,     Q,     W,     E,     R,     T,                      Y,     U,     I,     O,     P,  BSPC,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
       CTLTB,     A,     S,     D,     F,     G,                      H,     J,     K,     L,  SCLN,  QUOT,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LALT,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH,  RSFT,\
+       LSFT,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH,  RSFT,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
                                    LGUI, LOWER, SPACE,    ENTER, RAISE,  RALT
                               //`--------------------'  `--------------------'
@@ -70,37 +62,37 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_LOWER] = LAYOUT_kc(
   //,-----------------------------------------.                ,-----------------------------------------.
- TD(GRVTIL), XXXXX, XXXXX, XXXXX,  MINS,  LBRC,                   RBRC,     7,     8,     9,   INS,   DEL,\
+      XXXXX,     1,     2,     3,     4,     5,                      6,     7,     8,     9,     0,   DEL,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      CTLTB, XXXXX, XXXXX, XXXXX,   EQL,  LPRN,                   RPRN,     4,     5,     6,   WSL,   WSR,\
+      CTLTB, XXXXX, XXXXX,  LBRC,  LCBR,  LPRN,                   LEFT,  DOWN,    UP, RIGHT,   WSL,   WSR,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LALT, XXXXX, XXXXX, XXXXX,  UNDS,  LCBR,                   RCBR,     1,     2,     3, XXXXX,  RSFT,\
+       LALT, XXXXX, XXXXX,  RBRC,  RCBR,  RPRN,                   HOME,  PGDN,  PGUP,   END,  BSLS,   INS,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                   LGUI, LOWER, SPACE,    ENTER, RAISE,     0
+                                   LGUI, LOWER, SPACE,    ENTER, RAISE,  QUIT
                               //`--------------------'  `--------------------'
   ),
 
   [_RAISE] = LAYOUT_kc(
   //,-----------------------------------------.                ,-----------------------------------------.
- TD(GRVTIL),  EXLM,    AT,  HASH,   DLR,  PERC,                   CIRC,  AMPR,  ASTR,  UNDS,  PLUS,  MINS,\
+      XXXXX,  EXLM,    AT,  HASH,   DLR,  PERC,                   CIRC,  AMPR,  ASTR,  UNDS,  PLUS,  MINS,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      CTLTB,     M1,   M2,    M3,    M4, XXXXX,                   LEFT,  DOWN,    UP, RIGHT, XXXXX,  PIPE,\
+      CTLTB, XXXXX, XXXXX, XXXXX,   EQL,  UNDS,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,  PIPE,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LALT, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                   HOME,  PGDN,  PGUP,   END,  BSLS,  RSFT,\
+       LALT, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                   TILD,  XXXXX, XXXXX, XXXXX, BSLS,  RSFT,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                   LGUI, LOWER, SPACE,    ENTER, RAISE, SGUI(KC_Q)
+                                   LGUI, LOWER, SPACE,    ENTER, RAISE, XXXXX
                               //`--------------------'  `--------------------'
   ),
 
   [_ADJUST] = LAYOUT_kc(
   //,-----------------------------------------.                ,-----------------------------------------.
-      XXXXX, XXXXX, XXXXX,  EPRM, XXXXX,   RST,                  XXXXX, XXXXX,  MRWD,  MFFD, XXXXX, XXXXX,\
+      XXXXX, XXXXX, XXXXX,  ERMR,  RST,  XXXXX,                  XXXXX, XXXXX,  MRWD,  MFFD, XXXXX, XXXXX,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LTOG,  LHUI,  LSAI,  LVAI,  LSPI, XXXXX,                  XXXXX,  MPLY,  MPRV,  MNXT, XXXXX, XXXXX,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LMOD,  LHUD,  LSAD,  LVAD,  LSPD, XXXXX,                  XXXXX, XXXXX,  VOLD,  VOLU,  MUTE, XXXXX,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                   LALT, LOWER, SPACE,    ENTER, RAISE,  RALT
+                                  XXXXX, LOWER, XXXXX,    XXXXX, RAISE, XXXXX
                               //`--------------------'  `--------------------'
   )
 };
@@ -158,12 +150,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           layer_on(_ADJUST);
         } else {
           layer_off(_ADJUST);
-        }
-        return false;
-        break;
-     case EPRM:
-        if (record->event.pressed) {
-            eeconfig_init();
         }
         return false;
         break;
