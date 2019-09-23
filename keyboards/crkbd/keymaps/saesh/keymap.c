@@ -4,6 +4,7 @@
 #define _LOWER  1
 #define _RAISE  2
 #define _ADJUST 3
+#define _GAME   4
 
 #define KC______ KC_TRNS
 #define KC_XXXXX KC_NO
@@ -37,6 +38,7 @@
 #define KC_WSL G(C(KC_LEFT))    // Cycle to workspace left
 #define KC_WSR G(C(KC_RIGHT))   // Cycle to workspace right
 
+#define KC_TG(x) TG(x)
 
 extern uint8_t is_master;
 
@@ -44,7 +46,8 @@ enum custom_keycodes {
   QWERTY = SAFE_RANGE,
   LOWER,
   RAISE,
-  ADJUST
+  ADJUST,
+  GAME
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -86,13 +89,25 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_ADJUST] = LAYOUT_kc(
   //,-----------------------------------------.                ,-----------------------------------------.
-      XXXXX, XXXXX, XXXXX,  ERMR,  RST,  XXXXX,                  XXXXX, XXXXX,  MRWD,  MFFD, XXXXX, XXXXX,\
+  TG(_GAME), XXXXX, XXXXX,  ERMR,  RST,  XXXXX,                  XXXXX, XXXXX,  MRWD,  MFFD, XXXXX, XXXXX,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LTOG,  LHUI,  LSAI,  LVAI,  LSPI, XXXXX,                  XXXXX,  MPLY,  MPRV,  MNXT, XXXXX, XXXXX,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LMOD,  LHUD,  LSAD,  LVAD,  LSPD, XXXXX,                  XXXXX, XXXXX,  VOLD,  VOLU,  MUTE, XXXXX,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
                                   XXXXX, LOWER, XXXXX,    XXXXX, RAISE, XXXXX
+                              //`--------------------'  `--------------------'
+  ),
+
+  [_GAME] = LAYOUT_kc(
+  //,-----------------------------------------.                ,-----------------------------------------.
+        ESC,     Q,     W,     E,     R,     T,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,\
+  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
+       LSFT,     A,     S,     D,     F,     G,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,\
+  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
+       LCTL,     Z,     X,     C,     V,     B,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,\
+  //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
+                                      M,  LCTL, SPACE,   TG(_GAME), XXXXX, XXXXX
                               //`--------------------'  `--------------------'
   )
 };
@@ -170,7 +185,35 @@ void suspend_wakeup_init_user(void) {
 }
 
 #ifdef SSD1306OLED
-const char *read_layer_state(void);
+char matrix_line_str[24];
+const char *read_layer_state(void) {
+  uint8_t layer = biton32(layer_state);
+
+  strcpy(matrix_line_str, "Layer: ");
+
+  switch (layer)
+  {
+    case _QWERTY:
+      strcat(matrix_line_str, "Default");
+      break;
+    case _LOWER:
+      strcat(matrix_line_str, "Lower");
+      break;
+    case _RAISE:
+      strcat(matrix_line_str, "Raise");
+      break;
+    case _ADJUST:
+      strcat(matrix_line_str, "Adjust");
+      break;
+    case _GAME:
+      strcat(matrix_line_str, "Game");
+      break;
+    default:
+      sprintf(matrix_line_str + strlen(matrix_line_str), "Unknown (%d)", layer);
+  }
+
+  return matrix_line_str;
+}
 
 void matrix_render_user(struct CharacterMatrix *matrix) {
   if (is_master) {
