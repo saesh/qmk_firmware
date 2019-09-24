@@ -28,7 +28,7 @@
 
 #define KC_CTLTB CTL_T(KC_TAB)  // Ctrl+Tab
 #define KC_G(x) G(x)            // GUI
-#define KC_QUIT SGUI(KC_Q)   // i3 exit program
+#define KC_QUIT SGUI(KC_Q)      // i3 exit program
 #define KC_GESC GRAVE_ESC       // Grace Esc
 
 #define KC_M1 SGUI(KC_1)        // Move to first workspace
@@ -79,9 +79,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------.                ,-----------------------------------------.
       XXXXX,  EXLM,    AT,  HASH,   DLR,  PERC,                   CIRC,  AMPR,  ASTR,  UNDS,  PLUS,  MINS,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      CTLTB, XXXXX, XXXXX, XXXXX,   EQL,  UNDS,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,  PIPE,\
+      CTLTB, XXXXX, XXXXX, XXXXX,   EQL, XXXXX,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,  PIPE,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LALT, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                   TILD,  XXXXX, XXXXX, XXXXX, BSLS,  RSFT,\
+       LALT, XXXXX, XXXXX, XXXXX,   MINS, UNDS,                   TILD,  XXXXX, XXXXX, XXXXX, BSLS,  RSFT,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
                                    LGUI, LOWER, SPACE,    ENTER, RAISE, XXXXX
                               //`--------------------'  `--------------------'
@@ -99,6 +99,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                               //`--------------------'  `--------------------'
   ),
 
+  // Apex Legends
   [_GAME] = LAYOUT_kc(
   //,-----------------------------------------.                ,-----------------------------------------.
         ESC,     Q,     W,     E,     R,     T,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,\
@@ -107,7 +108,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LCTL,     Z,     X,     C,     V,     B,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                      M,  LCTL, SPACE,   TG(_GAME), XXXXX, XXXXX
+                                      M,     J , SPACE,   TG(_GAME), XXXXX, XXXXX
                               //`--------------------'  `--------------------'
   )
 };
