@@ -1,10 +1,11 @@
 #include QMK_KEYBOARD_H
 
 #define _QWERTY 0
-#define _LOWER  1
-#define _RAISE  2
-#define _ADJUST 3
-#define _GAME   4
+#define _I3     1
+#define _LOWER  2
+#define _RAISE  3
+#define _ADJUST 4
+#define _GAME   5
 
 #define KC______ KC_TRNS
 #define KC_XXXXX KC_NO
@@ -31,14 +32,12 @@
 #define KC_QUIT SGUI(KC_Q)      // i3 exit program
 #define KC_GESC GRAVE_ESC       // Grace Esc
 
-#define KC_M1 SGUI(KC_1)        // Move to first workspace
-#define KC_M2 SGUI(KC_2)
-#define KC_M3 SGUI(KC_3)
-#define KC_M4 SGUI(KC_4)
 #define KC_WSL G(C(KC_LEFT))    // Cycle to workspace left
 #define KC_WSR G(C(KC_RIGHT))   // Cycle to workspace right
 
 #define KC_TG(x) TG(x)
+#define KC_LM(l, m) LM(l, m)
+#define KC_MO(x) MO(x)
 
 extern uint8_t is_master;
 
@@ -59,7 +58,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LSFT,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH,  RSFT,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                   LGUI, LOWER, SPACE,    ENTER, RAISE,  RALT
+                        LM(1, MOD_LGUI), LOWER, SPACE,    ENTER, RAISE,  RALT
+                              //`--------------------'  `--------------------'
+  ),
+
+  [_I3] = LAYOUT_kc(
+  //,-----------------------------------------.                ,-----------------------------------------.
+      _____, _____, _____, _____, _____, _____,                  _____, _____,     1,     2,     3,     4,\
+  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
+      _____, _____, _____, _____, _____, _____,                  _____, _____,     5,     6,     7,     8,\
+  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
+      _____, _____, _____, _____, _____, _____,                  _____, _____,    F1,    F2,    F3,    F4,\
+  //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
+                                  _____, _____, _____,    _____, _____,  LALT
                               //`--------------------'  `--------------------'
   ),
 
@@ -196,6 +207,9 @@ const char *read_layer_state(void) {
   {
     case _QWERTY:
       strcat(matrix_line_str, "Default");
+      break;
+    case _I3:
+      strcat(matrix_line_str, "i3");
       break;
     case _LOWER:
       strcat(matrix_line_str, "Lower");
