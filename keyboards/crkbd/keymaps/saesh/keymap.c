@@ -42,6 +42,8 @@
 
 extern uint8_t is_master;
 
+static uint32_t oled_timer = 0;
+
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,
   LOWER,
@@ -113,64 +115,54 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   )
 };
 
-void matrix_init_user(void) {
-    #ifdef SSD1306OLED
-        // turns on the display
-        iota_gfx_init(!has_usb());
-    #endif
-}
+void matrix_init_user(void) {}
 
-void matrix_scan_user(void) {
-    #ifdef SSD1306OLED
-        // update display continously
-        iota_gfx_task();
-    #endif
-}
+void matrix_scan_user(void) {}
 
 void persistent_default_layer_set(uint16_t default_layer) {
-  eeconfig_update_default_layer(default_layer);
-  default_layer_set(default_layer);
+    eeconfig_update_default_layer(default_layer);
+    default_layer_set(default_layer);
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    #ifdef OLED_DRIVER_ENABLE
+        oled_timer = timer_read32();
+    #endif
 
-  switch (keycode) {
-    case QWERTY:
-      if (record->event.pressed) {
-        persistent_default_layer_set(1UL<<_QWERTY);
-      }
-      return false;
-      break;
-    case LOWER:
-      if (record->event.pressed) {
-        layer_on(_LOWER);
-        update_tri_layer(_LOWER, _RAISE, _ADJUST);
-      } else {
-        layer_off(_LOWER);
-        update_tri_layer(_LOWER, _RAISE, _ADJUST);
-      }
-      return false;
-      break;
-    case RAISE:
-      if (record->event.pressed) {
-        layer_on(_RAISE);
-        update_tri_layer(_LOWER, _RAISE, _ADJUST);
-      } else {
-        layer_off(_RAISE);
-        update_tri_layer(_LOWER, _RAISE, _ADJUST);
-      }
-      return false;
-      break;
-    case ADJUST:
-        if (record->event.pressed) {
-          layer_on(_ADJUST);
-        } else {
-          layer_off(_ADJUST);
-        }
-        return false;
-        break;
-  }
-  return true;
+    switch (keycode) {
+        case QWERTY:
+            if (record->event.pressed) {
+                persistent_default_layer_set(1UL<<_QWERTY);
+            }
+            return false;
+        case LOWER:
+            if (record->event.pressed) {
+                layer_on(_LOWER);
+                update_tri_layer(_LOWER, _RAISE, _ADJUST);
+            } else {
+                layer_off(_LOWER);
+                update_tri_layer(_LOWER, _RAISE, _ADJUST);
+            }
+            return false;
+        case RAISE:
+            if (record->event.pressed) {
+                layer_on(_RAISE);
+                update_tri_layer(_LOWER, _RAISE, _ADJUST);
+            } else {
+                layer_off(_RAISE);
+                update_tri_layer(_LOWER, _RAISE, _ADJUST);
+            }
+            return false;
+        case ADJUST:
+            if (record->event.pressed) {
+                layer_on(_ADJUST);
+            } else {
+                layer_off(_ADJUST);
+            }
+            return false;
+    }
+
+    return true;
 }
 
 void suspend_power_down_user(void) {
@@ -185,54 +177,47 @@ void suspend_wakeup_init_user(void) {
 #endif
 }
 
-#ifdef SSD1306OLED
-char matrix_line_str[24];
-const char *read_layer_state(void) {
-  uint8_t layer = biton32(layer_state);
+#ifdef OLED_DRIVER_ENABLE
 
-  strcpy(matrix_line_str, "Layer: ");
-
-  switch (layer)
-  {
-    case _QWERTY:
-      strcat(matrix_line_str, "Default");
-      break;
-    case _LOWER:
-      strcat(matrix_line_str, "Lower");
-      break;
-    case _RAISE:
-      strcat(matrix_line_str, "Raise");
-      break;
-    case _ADJUST:
-      strcat(matrix_line_str, "Adjust");
-      break;
-    case _GAME:
-      strcat(matrix_line_str, "Game");
-      break;
-    default:
-      sprintf(matrix_line_str + strlen(matrix_line_str), "Unknown (%d)", layer);
-  }
-
-  return matrix_line_str;
+static void render_status(void) {
+    if (is_keyboard_master()) {
+        switch (get_highest_layer(layer_state)) {
+            case _QWERTY:
+                oled_write_P(PSTR("QWERT\n"), false);
+                break;
+            case _LOWER:
+                oled_write_P(PSTR("LOWER\n"), false);
+                break;
+            case _RAISE:
+                oled_write_P(PSTR("RAISE\n"), false);
+                break;
+            case _ADJUST:
+                oled_write_P(PSTR("ADJUS\n"), false);
+                break;
+            case _GAME:
+                oled_write_P(PSTR("Game\n"), false);
+                break;
+            default:
+                oled_write_ln_P(PSTR("?????"), false);
+        }
+    }
 }
 
-void matrix_render_user(struct CharacterMatrix *matrix) {
-  if (is_master) {
-    matrix_write_ln(matrix, read_layer_state());
-  }
+oled_rotation_t oled_init_user(oled_rotation_t rotation) {
+    return OLED_ROTATION_270;
 }
 
-void matrix_update(struct CharacterMatrix *dest, const struct CharacterMatrix *source) {
-  if (memcmp(dest->display, source->display, sizeof(dest->display))) {
-    memcpy(dest->display, source->display, sizeof(dest->display));
-    dest->dirty = true;
-  }
+void oled_task_user(void) {
+    if (timer_elapsed32(oled_timer) > 30000) {
+        oled_off();
+        return;
+    } else {
+        oled_on();
+    }
+
+    if (is_master) {
+        render_status();
+    }
 }
 
-void iota_gfx_task_user(void) {
-  struct CharacterMatrix matrix;
-  matrix_clear(&matrix);
-  matrix_render_user(&matrix);
-  matrix_update(&display, &matrix);
-}
-#endif
+#endif // OLED_DRIVER_ENABLE
