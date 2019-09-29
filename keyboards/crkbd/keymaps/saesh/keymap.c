@@ -42,8 +42,6 @@
 
 extern uint8_t is_master;
 
-static uint32_t oled_timer = 0;
-
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,
   LOWER,
@@ -51,6 +49,33 @@ enum custom_keycodes {
   ADJUST,
   GAME
 };
+
+#ifdef OLED_DRIVER_ENABLE
+static uint32_t oled_timer = 0;
+const char code_to_name[60] = {
+    ' ', ' ', ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f',
+    'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
+    'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+    '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
+    'R', 'E', 'B', 'T', ' ', ' ', ' ', ' ', ' ', ' ',
+    ' ', ';', '\'', ' ', ',', '.', '/', ' ', ' ', ' '};
+char keylog_str[6] = {};
+char codelog_str[6] = {};
+
+void add_to_keylog(uint16_t keycode) {
+    if ((keycode >= QK_MOD_TAP && keycode <= QK_MOD_TAP_MAX) || (keycode >= QK_LAYER_TAP && keycode <= QK_LAYER_TAP_MAX)) {
+        keycode = keycode & 0xFF;
+    }
+
+    char name = ' ';
+    if (keycode < 60) {
+        name = code_to_name[keycode];
+    }
+
+    snprintf(keylog_str, sizeof(keylog_str), "%c", name);
+    snprintf(codelog_str, sizeof(codelog_str), "%2d", keycode);
+}
+#endif
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_QWERTY] = LAYOUT_kc(
@@ -127,6 +152,7 @@ void persistent_default_layer_set(uint16_t default_layer) {
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     #ifdef OLED_DRIVER_ENABLE
         oled_timer = timer_read32();
+        add_to_keylog(keycode);
     #endif
 
     switch (keycode) {
@@ -179,36 +205,38 @@ void suspend_wakeup_init_user(void) {
 
 #ifdef OLED_DRIVER_ENABLE
 
-static void render_status(void) {
-    if (is_keyboard_master()) {
-        switch (get_highest_layer(layer_state)) {
-            case _QWERTY:
-                oled_write_P(PSTR("QWERT\n"), false);
-                break;
-            case _LOWER:
-                oled_write_P(PSTR("LOWER\n"), false);
-                break;
-            case _RAISE:
-                oled_write_P(PSTR("RAISE\n"), false);
-                break;
-            case _ADJUST:
-                oled_write_P(PSTR("ADJUS\n"), false);
-                break;
-            case _GAME:
-                oled_write_P(PSTR("Game\n"), false);
-                break;
-            default:
-                oled_write_ln_P(PSTR("?????"), false);
-        }
-    }
-}
-
+// rotate both OLEDs by 270, orientiation is vertical
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     return OLED_ROTATION_270;
 }
 
+static bool layer_is(uint8_t layer) {
+    return get_highest_layer(layer_state) == layer;
+}
+
+static void render_layers(void) {
+    oled_write_P(PSTR(" BASE"), layer_is(_QWERTY));
+    oled_write_P(PSTR("LOWER"), layer_is(_LOWER));
+    oled_write_P(PSTR("RAISE"), layer_is(_RAISE));
+    oled_write_P(PSTR("ADJUS"), layer_is(_ADJUST));
+    oled_write_P(PSTR(" GAME"), layer_is(_GAME));
+}
+
+static void render_keylog(void) {
+    oled_write_ln(keylog_str, false);
+}
+
+static void render_codelog(void) {
+    oled_write_ln(codelog_str, false);
+}
+
+static void render_empty_line(void) {
+    oled_write_P(PSTR("\n"), false);
+}
+
 void oled_task_user(void) {
-    if (timer_elapsed32(oled_timer) > 30000) {
+    // disable OLED on idle and do not proceed
+    if (timer_elapsed32(oled_timer) > 20000) {
         oled_off();
         return;
     } else {
@@ -216,7 +244,10 @@ void oled_task_user(void) {
     }
 
     if (is_master) {
-        render_status();
+        render_layers();
+        render_empty_line();
+        render_codelog();
+        render_keylog();
     }
 }
 
