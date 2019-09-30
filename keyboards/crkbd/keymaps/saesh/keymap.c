@@ -131,7 +131,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                               //`--------------------'  `--------------------'
   ),
 
-  // Apex Legends
   [_GAME] = LAYOUT_kc(
   //,-----------------------------------------.                ,-----------------------------------------.
         ESC,     Q,     W,     E,     R,     T,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,\
@@ -209,15 +208,10 @@ void suspend_wakeup_init_user(void) {
 }
 
 static void set_background_red(void) {
-#ifdef RGBLIGHT_ENABLE
-    rgblight_enable_noeeprom();
-    rgblight_mode_noeeprom(1);
-    rgblight_setrgb_red();
-#endif  // RGBLIGHT_ENABLE
 #ifdef RGB_MATRIX_ENABLE
     rgb_matrix_set_color_all( 0xFF, 0x00, 0x00 );
     rgb_matrix_update_pwm_buffers();
-#endif  // RGB_MATRIX_ENABLE
+#endif
 }
 
 /* on user initiated reset */
