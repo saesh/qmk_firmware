@@ -40,7 +40,12 @@
 
 #define KC_TG(x) TG(x)
 
+// imports
 extern uint8_t is_master;
+__attribute__((weak))
+void shutdown_keymap(void) {}
+void rgb_matrix_update_pwm_buffers(void);
+// end imports
 
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,
@@ -201,6 +206,24 @@ void suspend_wakeup_init_user(void) {
 #ifdef RGB_MATRIX_ENABLE
     rgb_matrix_set_suspend_state(false);
 #endif
+}
+
+static void set_background_red(void) {
+#ifdef RGBLIGHT_ENABLE
+    rgblight_enable_noeeprom();
+    rgblight_mode_noeeprom(1);
+    rgblight_setrgb_red();
+#endif  // RGBLIGHT_ENABLE
+#ifdef RGB_MATRIX_ENABLE
+    rgb_matrix_set_color_all( 0xFF, 0x00, 0x00 );
+    rgb_matrix_update_pwm_buffers();
+#endif  // RGB_MATRIX_ENABLE
+}
+
+/* on user initiated reset */
+void shutdown_user(void) {
+    set_background_red();
+    shutdown_keymap();
 }
 
 #ifdef OLED_DRIVER_ENABLE
