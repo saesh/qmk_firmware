@@ -195,6 +195,33 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
+void rgb_matrix_indicators_user(void) {
+    switch (biton32(layer_state)) {
+        case _LOWER:
+            // left side
+            if (is_master) rgb_matrix_set_color(16,  0x00, 0xFF, 0x00); // d green
+            if (is_master) rgb_matrix_set_color(15,  0x00, 0xFF, 0x00); // c green
+            if (is_master) rgb_matrix_set_color(11,  0xFF, 0x00, 0xFF); // f violet
+            if (is_master) rgb_matrix_set_color(12,  0xFF, 0x00, 0xFF); // v violet
+            if (is_master) rgb_matrix_set_color( 8,  0xFF, 0x80, 0x00); // g orange
+            if (is_master) rgb_matrix_set_color( 7,  0xFF, 0x80, 0x00); // b orange
+            // right side
+            if (!is_master) rgb_matrix_set_color(8,  0xFF, 0x00, 0x00); // h red
+            if (!is_master) rgb_matrix_set_color(11, 0xFF, 0x00, 0x00); // j red
+            if (!is_master) rgb_matrix_set_color(16, 0xFF, 0x00, 0x00); // k red
+            if (!is_master) rgb_matrix_set_color(19, 0xFF, 0x00, 0x00); // l red
+            break;
+        case _RAISE:
+            if (is_master) rgb_matrix_set_color(12, 0xFF, 0xFF, 0x00); // v yellow
+            if (is_master) rgb_matrix_set_color( 7, 0xFF, 0x00, 0x00); // b red
+            break;
+        case _ADJUST:
+            if (is_master) rgb_matrix_set_color(17, 0x00, 0x00, 0xFF); // e blue
+            if (is_master) rgb_matrix_set_color(10, 0xFF, 0x00, 0x00); // r red
+            break;
+    }
+}
+
 void suspend_power_down_user(void) {
 #ifdef RGB_MATRIX_ENABLE
     rgb_matrix_set_suspend_state(true);
