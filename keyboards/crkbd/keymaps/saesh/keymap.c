@@ -40,6 +40,8 @@
 
 #define KC_TG(x) TG(x)
 
+#define KC_OLTOGL OLTOGL
+
 // imports
 extern uint8_t is_master;
 __attribute__((weak))
@@ -52,10 +54,12 @@ enum custom_keycodes {
   LOWER,
   RAISE,
   ADJUST,
-  GAME
+  GAME,
+  OLTOGL
 };
 
 #ifdef OLED_DRIVER_ENABLE
+static bool oled_should_be_off = false;
 static uint32_t oled_timer = 0;
 const char code_to_name[60] = {
     ' ', ' ', ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f',
@@ -121,7 +125,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_ADJUST] = LAYOUT_kc(
   //,-----------------------------------------.                ,-----------------------------------------.
-  TG(_GAME), XXXXX, XXXXX,  ERMR,  RST,  XXXXX,                  XXXXX, XXXXX,  MRWD,  MFFD, XXXXX, XXXXX,\
+  TG(_GAME), XXXXX, XXXXX,  ERMR,  RST, OLTOGL,                  XXXXX, XXXXX,  MRWD,  MFFD, XXXXX, XXXXX,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LTOG,  LHUI,  LSAI,  LVAI,  LSPI, XXXXX,                  XXXXX,  MPLY,  MPRV,  MNXT, XXXXX, XXXXX,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
@@ -190,6 +194,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 layer_off(_ADJUST);
             }
             return false;
+        case OLTOGL:
+            if (record->event.pressed) {
+                oled_should_be_off = !oled_should_be_off;
+            }
     }
 
     return true;
@@ -218,6 +226,7 @@ void rgb_matrix_indicators_user(void) {
         case _ADJUST:
             if (is_master) rgb_matrix_set_color(17, 0x00, 0x00, 0xFF); // e blue
             if (is_master) rgb_matrix_set_color(10, 0xFF, 0x00, 0x00); // r red
+            if (is_master) rgb_matrix_set_color( 9, 0xFF, 0xFF, 0xFF); // t white
             break;
     }
 }
@@ -280,7 +289,7 @@ static void render_empty_line(void) {
 
 void oled_task_user(void) {
     // disable OLED on idle and do not proceed
-    if (timer_elapsed32(oled_timer) > 20000) {
+    if (oled_should_be_off == true || timer_elapsed32(oled_timer) > 20000) {
         oled_off();
         return;
     } else {
