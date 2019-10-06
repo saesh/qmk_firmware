@@ -28,15 +28,7 @@
 
 #define KC_CTLTB CTL_T(KC_TAB)  // Ctrl+Tab
 #define KC_G(x) G(x)            // GUI
-#define KC_QUIT SGUI(KC_Q)      // i3 exit program
 #define KC_GESC GRAVE_ESC       // Grace Esc
-
-#define KC_M1 SGUI(KC_1)        // Move to first workspace
-#define KC_M2 SGUI(KC_2)
-#define KC_M3 SGUI(KC_3)
-#define KC_M4 SGUI(KC_4)
-#define KC_WSL G(C(KC_LEFT))    // Cycle to workspace left
-#define KC_WSR G(C(KC_RIGHT))   // Cycle to workspace right
 
 #define KC_TG(x) TG(x)
 
@@ -54,7 +46,6 @@ enum custom_keycodes {
   LOWER,
   RAISE,
   ADJUST,
-  GAME,
   OLTOGL
 };
 
@@ -103,11 +94,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------.                ,-----------------------------------------.
       XXXXX,     1,     2,     3,     4,     5,                      6,     7,     8,     9,     0,   DEL,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      CTLTB, XXXXX, XXXXX,  LBRC,  LCBR,  LPRN,                   LEFT,  DOWN,    UP, RIGHT,   WSL,   WSR,\
+      _____, XXXXX, XXXXX,  LBRC,  LCBR,  LPRN,                   LEFT,  DOWN,    UP, RIGHT, XXXXX,   INS,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LALT, XXXXX, XXXXX,  RBRC,  RCBR,  RPRN,                   HOME,  PGDN,  PGUP,   END,  BSLS,   INS,\
+      _____, XXXXX, XXXXX,  RBRC,  RCBR,  RPRN,                   HOME,  PGDN,  PGUP,   END,  BSLS,  LALT,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                   LGUI, LOWER, SPACE,    ENTER, RAISE,  QUIT
+                                  _____, _____, _____,    _____, _____, _____
                               //`--------------------'  `--------------------'
   ),
 
@@ -115,36 +106,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------.                ,-----------------------------------------.
       XXXXX,  EXLM,    AT,  HASH,   DLR,  PERC,                   CIRC,  AMPR,  ASTR,  UNDS,  PLUS,  MINS,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      CTLTB, XXXXX, XXXXX, XXXXX,   EQL, XXXXX,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,  PIPE,\
+      _____, XXXXX, XXXXX, XXXXX,   EQL, XXXXX,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,  PIPE,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LALT, XXXXX, XXXXX, XXXXX,   MINS, UNDS,                   TILD,  XXXXX, XXXXX, XXXXX, BSLS,  RSFT,\
+       LALT, XXXXX, XXXXX, XXXXX,   MINS, UNDS,                   TILD,  XXXXX, XXXXX, XXXXX, BSLS, _____,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                   LGUI, LOWER, SPACE,    ENTER, RAISE, XXXXX
+                                  _____, _____, _____,    _____, _____, _____
                               //`--------------------'  `--------------------'
   ),
 
   [_ADJUST] = LAYOUT_kc(
   //,-----------------------------------------.                ,-----------------------------------------.
-  TG(_GAME), XXXXX, XXXXX,  ERMR,  RST, OLTOGL,                  XXXXX, XXXXX,  MRWD,  MFFD, XXXXX, XXXXX,\
+      XXXXX, XXXXX, XXXXX,  ERMR,  RST, OLTOGL,                  XXXXX, XXXXX,  MRWD,  MFFD, XXXXX, XXXXX,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LTOG,  LHUI,  LSAI,  LVAI,  LSPI, XXXXX,                  XXXXX,  MPLY,  MPRV,  MNXT, XXXXX, XXXXX,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LMOD,  LHUD,  LSAD,  LVAD,  LSPD, XXXXX,                  XXXXX, XXXXX,  VOLD,  VOLU,  MUTE, XXXXX,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                  XXXXX, LOWER, XXXXX,    XXXXX, RAISE, XXXXX
-                              //`--------------------'  `--------------------'
-  ),
-
-  // Factorio
-  [_GAME] = LAYOUT_kc(
-  //,-----------------------------------------.                ,-----------------------------------------.
-        ESC, _____, _____, _____, _____, _____,                  _____, _____, _____, _____, _____, _____,\
-  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LSFT, _____, _____, _____, _____, _____,                  _____, _____, _____, _____, _____, _____,\
-  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LCTL, _____, _____, _____, _____, _____,                  _____, _____, _____, _____, _____, _____,\
-  //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                   LALT,  LCTL, SPACE,   TG(_GAME), _____, _____
+                                  XXXXX, _____, XXXXX,    XXXXX, _____, XXXXX
                               //`--------------------'  `--------------------'
   )
 };
@@ -224,11 +202,6 @@ void rgb_matrix_indicators_user(void) {
             if (is_master) rgb_matrix_set_color(12, 0xFF, 0xFF, 0x00); // v yellow
             if (is_master) rgb_matrix_set_color( 7, 0xFF, 0x00, 0x00); // b red
             break;
-        case _ADJUST:
-            if (is_master) rgb_matrix_set_color(17, 0x00, 0x00, 0xFF); // e blue
-            if (is_master) rgb_matrix_set_color(10, 0xFF, 0x00, 0x00); // r red
-            if (is_master) rgb_matrix_set_color( 9, 0xFF, 0xFF, 0xFF); // t white
-            break;
     }
 }
 
@@ -273,7 +246,6 @@ static void render_layers(void) {
     oled_write_P(PSTR("LOWER"), layer_is(_LOWER));
     oled_write_P(PSTR("RAISE"), layer_is(_RAISE));
     oled_write_P(PSTR("ADJUS"), layer_is(_ADJUST));
-    oled_write_P(PSTR(" GAME"), layer_is(_GAME));
 }
 
 static void render_keylog(void) {
