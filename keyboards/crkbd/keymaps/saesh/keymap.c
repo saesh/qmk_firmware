@@ -234,7 +234,11 @@ void shutdown_user(void) {
 
 // rotate both OLEDs by 270, orientiation is vertical
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-    return OLED_ROTATION_270;
+    if (is_master) {
+        return OLED_ROTATION_270;
+    }
+    
+    return rotation;
 }
 
 static bool layer_is(uint8_t layer) {
@@ -260,6 +264,13 @@ static void render_empty_line(void) {
     oled_write_P(PSTR("\n"), false);
 }
 
+static void render_qmk_info(void) {
+    oled_write_ln_P(PSTR("QMK " QMK_VERSION_TAG), false);
+    oled_write_ln_P(PSTR(BUILD_TIMESTAMP), false);
+    oled_write_ln_P(PSTR(GIT_HASH), false);
+    oled_write_ln_P(PSTR(KEYMAP_BRANCH), false);
+}
+
 void oled_task_user(void) {
     // disable OLED on idle and do not proceed
     if (oled_should_be_off == true || timer_elapsed32(oled_timer) > 20000) {
@@ -274,6 +285,8 @@ void oled_task_user(void) {
         render_empty_line();
         render_codelog();
         render_keylog();
+    } else {
+        render_qmk_info();
     }
 }
 

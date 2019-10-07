@@ -32,3 +32,20 @@ EXTRAFLAGS += -flto
 
 # Change to yes in docker_build.sh if flashing right side
 #RGB_MATRIX_SPLIT_RIGHT=no
+
+KEYMAP_BRANCH = $(shell \
+ git rev-parse --abbrev-ref HEAD 2>/dev/null)
+
+GIT_HASH = $(shell \
+ git log --pretty=format:'%h' -n 1 2>/dev/null)
+
+QMK_VERSION_TAG = $(shell \
+ git describe --tags --abbrev=0 2>/dev/null)
+
+BUILD_TIMESTAMP = $(shell \
+ date '+%Y-%m-%dT%H:%M:%S' 2>/dev/null)
+
+OPT_DEFS += -DKEYMAP_BRANCH=\"$(KEYMAP_BRANCH)\" \
+            -DQMK_VERSION_TAG=\"$(QMK_VERSION_TAG)\" \
+            -DBUILD_TIMESTAMP=\"$(BUILD_TIMESTAMP)\" \
+            -DGIT_HASH=\"$(GIT_HASH)\"
