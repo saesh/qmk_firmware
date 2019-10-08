@@ -59,8 +59,8 @@ const char code_to_name[60] = {
     '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
     'R', 'E', 'B', 'T', ' ', ' ', ' ', ' ', ' ', ' ',
     ' ', ';', '\'', ' ', ',', '.', '/', ' ', ' ', ' '};
-char keylog_str[6] = {};
 char codelog_str[6] = {};
+char keylog_str[6] = {};
 
 void add_to_keylog(uint16_t keycode) {
     if ((keycode >= QK_MOD_TAP && keycode <= QK_MOD_TAP_MAX) || (keycode >= QK_LAYER_TAP && keycode <= QK_LAYER_TAP_MAX)) {
@@ -72,8 +72,8 @@ void add_to_keylog(uint16_t keycode) {
         name = code_to_name[keycode];
     }
 
-    snprintf(keylog_str, sizeof(keylog_str), "%c", name);
-    snprintf(codelog_str, sizeof(codelog_str), "%2d", keycode);
+    snprintf(codelog_str, sizeof(codelog_str), "%5d", keycode);
+    snprintf(keylog_str, sizeof(keylog_str), "    %c", name);
 }
 #endif
 
@@ -94,9 +94,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------.                ,-----------------------------------------.
       XXXXX, XXXXX, XXXXX,  LBRC,  LCBR,  LPRN,                   RPRN,  RCBR,  RBRC, XXXXX, XXXXX,   DEL,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      _____, XXXXX, XXXXX,  MINS,   EQL,  UNDS,                   LEFT,  DOWN,    UP, RIGHT, XXXXX,   INS,\
+      _____, XXXXX, XXXXX, XXXXX,   EQL,  MINS,                   LEFT,  DOWN,    UP, RIGHT, XXXXX,   INS,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      _____, XXXXX, XXXXX,  HASH,  PLUS, XXXXX,                   HOME,  PGDN,  PGUP,   END,  BSLS,  LALT,\
+      _____, XXXXX, XXXXX,  HASH,  PLUS,  UNDS,                   HOME,  PGDN,  PGUP,   END,  BSLS,  LALT,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
                                   _____, _____, _____,    _____, _____, _____
                               //`--------------------'  `--------------------'
@@ -217,7 +217,7 @@ void suspend_wakeup_init_user(void) {
 #endif
 }
 
-static void set_background_red(void) {
+void set_background_red(void) {
 #ifdef RGB_MATRIX_ENABLE
     rgb_matrix_set_color_all( 0xFF, 0x00, 0x00 );
     rgb_matrix_update_pwm_buffers();
@@ -241,30 +241,38 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     return rotation;
 }
 
-static bool layer_is(uint8_t layer) {
+bool layer_is(uint8_t layer) {
     return get_highest_layer(layer_state) == layer;
 }
 
-static void render_layers(void) {
+void render_layers(void) {
     oled_write_P(PSTR(" BASE"), layer_is(_QWERTY));
     oled_write_P(PSTR("LOWER"), layer_is(_LOWER));
     oled_write_P(PSTR("RAISE"), layer_is(_RAISE));
     oled_write_P(PSTR("ADJUS"), layer_is(_ADJUST));
 }
 
-static void render_keylog(void) {
-    oled_write_ln(keylog_str, false);
+void render_codelog(void) {
+    oled_write(codelog_str, false);
 }
 
-static void render_codelog(void) {
-    oled_write_ln(codelog_str, false);
+void render_keylog(void) {
+    oled_write(keylog_str, false);
 }
 
-static void render_empty_line(void) {
+void render_empty_line(void) {
     oled_write_P(PSTR("\n"), false);
 }
 
-static void render_qmk_info(void) {
+void render_mod_status(void) {
+    uint8_t modifiers = get_mods()|get_oneshot_mods();
+    oled_write_P(PSTR("Shift"), (modifiers & MOD_MASK_SHIFT));
+    oled_write_P(PSTR(" Ctrl"), (modifiers & MOD_MASK_CTRL));
+    oled_write_P(PSTR("  Alt"), (modifiers & MOD_MASK_ALT));
+    oled_write_P(PSTR("  Gui"), (modifiers & MOD_MASK_GUI));
+}
+
+void render_qmk_info(void) {
     oled_write_ln_P(PSTR("QMK " QMK_VERSION_TAG), false);
     oled_write_ln_P(PSTR(BUILD_TIMESTAMP), false);
     oled_write_ln_P(PSTR(GIT_HASH), false);
@@ -285,6 +293,8 @@ void oled_task_user(void) {
         render_empty_line();
         render_codelog();
         render_keylog();
+        render_empty_line();
+        render_mod_status();
     } else {
         render_qmk_info();
     }
