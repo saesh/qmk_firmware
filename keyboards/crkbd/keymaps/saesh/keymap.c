@@ -280,10 +280,11 @@ void render_empty_line(void) {
 
 void render_mod_status(void) {
     uint8_t modifiers = get_mods()|get_oneshot_mods();
-    oled_write_P(PSTR("Shift"), (modifiers & MOD_MASK_SHIFT));
-    oled_write_P(PSTR(" Ctrl"), (modifiers & MOD_MASK_CTRL));
-    oled_write_P(PSTR("  Alt"), (modifiers & MOD_MASK_ALT));
-    oled_write_P(PSTR("  Gui"), (modifiers & MOD_MASK_GUI));
+    oled_write_P(PSTR(" "), false);
+    oled_write_P(PSTR("S"), (modifiers & MOD_MASK_SHIFT));
+    oled_write_P(PSTR("C"), (modifiers & MOD_MASK_CTRL));
+    oled_write_P(PSTR("A"), (modifiers & MOD_MASK_ALT));
+    oled_write_P(PSTR("G"), (modifiers & MOD_MASK_GUI));
 }
 
 void render_qmk_info(void) {
