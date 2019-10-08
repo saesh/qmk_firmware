@@ -297,6 +297,14 @@ void render_mod_status(void) {
     oled_write_P(PSTR("G"), (modifiers & MOD_MASK_GUI));
 }
 
+void render_keylock_status(void) {
+    uint8_t led_usb_state = host_keyboard_leds();
+    oled_write_P(PSTR("  "), false);
+    oled_write_P(PSTR("N"), led_usb_state & (1 << USB_LED_NUM_LOCK));
+    oled_write_P(PSTR("C"), led_usb_state & (1 << USB_LED_CAPS_LOCK));
+    oled_write_P(PSTR("S"), led_usb_state & (1 << USB_LED_SCROLL_LOCK));
+}
+
 void render_qmk_info(void) {
     oled_write_ln_P(PSTR("QMK " QMK_VERSION_TAG), false);
     oled_write_ln_P(PSTR(BUILD_TIMESTAMP), false);
@@ -320,6 +328,7 @@ void oled_task_user(void) {
         render_keylog();
         render_empty_line();
         render_mod_status();
+        render_keylock_status();
     } else {
         render_qmk_info();
     }
