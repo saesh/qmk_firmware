@@ -186,21 +186,35 @@ void rgb_matrix_indicators_user(void) {
     switch (biton32(layer_state)) {
         case _LOWER:
             // left side
-            if (is_master) rgb_matrix_set_color(16,  0x00, 0xFF, 0x00); // d green
-            if (is_master) rgb_matrix_set_color(15,  0x00, 0xFF, 0x00); // c green
-            if (is_master) rgb_matrix_set_color(11,  0xFF, 0x00, 0xFF); // f violet
-            if (is_master) rgb_matrix_set_color(12,  0xFF, 0x00, 0xFF); // v violet
-            if (is_master) rgb_matrix_set_color( 8,  0xFF, 0x80, 0x00); // g orange
-            if (is_master) rgb_matrix_set_color( 7,  0xFF, 0x80, 0x00); // b orange
+            if (is_master) rgb_matrix_set_color(17,  0x00, 0xFF, 0x00); // e green
+            if (is_master) rgb_matrix_set_color(10,  0xFF, 0x00, 0xFF); // r violet
+            if (is_master) rgb_matrix_set_color( 9,  0xFF, 0x80, 0x00); // t orange
+            
             // right side
-            if (!is_master) rgb_matrix_set_color(8,  0xFF, 0x00, 0x00); // h red
+            if (!is_master) rgb_matrix_set_color(17,  0x00, 0xFF, 0x00); // i green
+            if (!is_master) rgb_matrix_set_color(10,  0xFF, 0x00, 0xFF); // u violet
+            if (!is_master) rgb_matrix_set_color( 9,  0xFF, 0x80, 0x00); // y orange
+
+            if (!is_master) rgb_matrix_set_color(8,  0xFF, 0xFF, 0x00); // h yellow
             if (!is_master) rgb_matrix_set_color(11, 0xFF, 0x00, 0x00); // j red
-            if (!is_master) rgb_matrix_set_color(16, 0xFF, 0x00, 0x00); // k red
-            if (!is_master) rgb_matrix_set_color(19, 0xFF, 0x00, 0x00); // l red
+            if (!is_master) rgb_matrix_set_color(16, 0x00, 0xFF, 0x00); // k green
+            if (!is_master) rgb_matrix_set_color(19, 0x00, 0x00, 0xFF); // l blue
+
+            if (!is_master) rgb_matrix_set_color(24, 0xFF, 0x00, 0x00); // del red
+            if (!is_master) rgb_matrix_set_color(25, 0x00, 0xFF, 0x00); // ' green
             break;
         case _RAISE:
-            if (is_master) rgb_matrix_set_color(12, 0xFF, 0xFF, 0x00); // v yellow
-            if (is_master) rgb_matrix_set_color( 7, 0xFF, 0x00, 0x00); // b red
+            if (is_master) rgb_matrix_set_color(22, 0xFF, 0xFF, 0xFF); // a white
+            if (is_master) rgb_matrix_set_color(19, 0xFF, 0xFF, 0xFF); // s white
+            if (is_master) rgb_matrix_set_color(16, 0xFF, 0xFF, 0xFF); // d white
+            if (is_master) rgb_matrix_set_color(11, 0xFF, 0xFF, 0xFF); // f white
+            if (is_master) rgb_matrix_set_color( 8, 0xFF, 0xFF, 0xFF); // g white
+
+            if (!is_master) rgb_matrix_set_color( 8, 0xFF, 0xFF, 0xFF); // h white
+            if (!is_master) rgb_matrix_set_color(11, 0xFF, 0xFF, 0xFF); // j white
+            if (!is_master) rgb_matrix_set_color(16, 0xFF, 0xFF, 0xFF); // k white
+            if (!is_master) rgb_matrix_set_color(19, 0xFF, 0xFF, 0xFF); // l white
+            if (!is_master) rgb_matrix_set_color(22, 0xFF, 0xFF, 0xFF); // ; white
             break;
     }
 }
