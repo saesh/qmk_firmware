@@ -20,19 +20,6 @@ SLEEP_LED_ENABLE = no    # Breathing sleep LED during USB suspend
 
 EXTRAFLAGS += -flto
 
-# If you want to change the display of OLED, you need to change here
-#SRC +=  ./lib/glcdfont.c \
-		#./lib/layer_state_reader.c \
-        #./lib/rgb_state_reader.c \
-        #./lib/logo_reader.c \
-        #./lib/keylogger.c \
-        #./lib/mode_icon_reader.c \
-        #./lib/host_led_state_reader.c \
-        #./lib/timelogger.c \
-
-# Change to yes in docker_build.sh if flashing right side
-#RGB_MATRIX_SPLIT_RIGHT=no
-
 KEYMAP_BRANCH = $(shell \
  git rev-parse --abbrev-ref HEAD 2>/dev/null)
 
