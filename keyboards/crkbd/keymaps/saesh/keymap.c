@@ -59,8 +59,8 @@ const char code_to_name[60] = {
     '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
     'R', 'E', 'B', 'T', ' ', ' ', ' ', ' ', ' ', ' ',
     ' ', ';', '\'', ' ', ',', '.', '/', ' ', ' ', ' '};
-char codelog_str[6] = {};
-char keylog_str[6] = {};
+char codelog_str[6] = {' ', 'c', 'o', 'd', 'e'};
+char keylog_str[6]  = {' ', 'k', 'e', 'y', ' '};
 
 void add_to_keylog(uint16_t keycode) {
     if ((keycode >= QK_MOD_TAP && keycode <= QK_MOD_TAP_MAX) || (keycode >= QK_LAYER_TAP && keycode <= QK_LAYER_TAP_MAX)) {
