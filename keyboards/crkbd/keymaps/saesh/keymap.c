@@ -33,6 +33,7 @@
 #define KC_TG(x) TG(x)
 
 #define KC_OLTOGL OLTOGL
+#define KC_SHCAP TD(SHFT_CAPS)
 
 // imports
 extern uint8_t is_master;
@@ -47,6 +48,15 @@ enum custom_keycodes {
   RAISE,
   ADJUST,
   OLTOGL
+};
+
+enum {
+  SHFT_CAPS = 0
+};
+
+qk_tap_dance_action_t tap_dance_actions[] = {
+  //Tap once for Shift, twice for Caps Lock
+  [SHFT_CAPS]  = ACTION_TAP_DANCE_DOUBLE(KC_LSFT, KC_CAPS)
 };
 
 #ifdef OLED_DRIVER_ENABLE
@@ -84,7 +94,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
       CTLTB,     A,     S,     D,     F,     G,                      H,     J,     K,     L,  SCLN,  QUOT,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LSFT,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH,  RSFT,\
+      SHCAP,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH, SHCAP,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
                                    LGUI, LOWER, SPACE,    ENTER, RAISE,  RALT
                               //`--------------------'  `--------------------'
