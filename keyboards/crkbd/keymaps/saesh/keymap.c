@@ -204,16 +204,16 @@ void rgb_matrix_indicators_user(void) {
             if (!is_master) rgb_matrix_set_color(25, 0x00, 0xFF, 0x00); // ' green
             break;
         case _RAISE:
-            if (is_master) rgb_matrix_set_color(22, 0xFF, 0xFF, 0xFF); // a white
+            if (is_master) rgb_matrix_set_color(22, 0xFF, 0x00, 0x51); // a white
             if (is_master) rgb_matrix_set_color(19, 0xFF, 0xFF, 0xFF); // s white
-            if (is_master) rgb_matrix_set_color(16, 0xFF, 0xFF, 0xFF); // d white
+            if (is_master) rgb_matrix_set_color(16, 0xFF, 0x00, 0x51); // d white
             if (is_master) rgb_matrix_set_color(11, 0xFF, 0xFF, 0xFF); // f white
-            if (is_master) rgb_matrix_set_color( 8, 0xFF, 0xFF, 0xFF); // g white
+            if (is_master) rgb_matrix_set_color( 8, 0xFF, 0x00, 0x51); // g white
 
             if (!is_master) rgb_matrix_set_color( 8, 0xFF, 0xFF, 0xFF); // h white
-            if (!is_master) rgb_matrix_set_color(11, 0xFF, 0xFF, 0xFF); // j white
+            if (!is_master) rgb_matrix_set_color(11, 0xFF, 0x00, 0x51); // j white
             if (!is_master) rgb_matrix_set_color(16, 0xFF, 0xFF, 0xFF); // k white
-            if (!is_master) rgb_matrix_set_color(19, 0xFF, 0xFF, 0xFF); // l white
+            if (!is_master) rgb_matrix_set_color(19, 0xFF, 0x00, 0x51); // l white
             if (!is_master) rgb_matrix_set_color(22, 0xFF, 0xFF, 0xFF); // ; white
             break;
     }
