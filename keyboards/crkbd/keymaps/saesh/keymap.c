@@ -4,50 +4,39 @@
 #define _LOWER  1
 #define _RAISE  2
 #define _ADJUST 3
-#define _GAME   4
 
-#define KC______ KC_TRNS
-#define KC_XXXXX KC_NO
+#define KC______    KC_TRNS
+#define KC_XXXXX    KC_NO
 
-#define KC_LOWER LOWER
-#define KC_RAISE RAISE
+#define KC_LOWER    LOWER
+#define KC_RAISE    RAISE
 
-#define KC_RST   RESET          // Reset controller
-#define KC_ERMR  EEP_RST        // EEPROM reset
+#define KC_RST      RESET          // Reset controller
+#define KC_ERMR     EEP_RST        // EEPROM reset
 
-#define KC_LTOG  RGB_TOG
-#define KC_LMOD  RGB_MOD
-#define KC_LHUI  RGB_HUI
-#define KC_LHUD  RGB_HUD
-#define KC_LSAI  RGB_SAI
-#define KC_LSAD  RGB_SAD
-#define KC_LVAI  RGB_VAI
-#define KC_LVAD  RGB_VAD
-#define KC_LSPI  RGB_SPI
-#define KC_LSPD  RGB_SPD
+#define KC_LTOG     RGB_TOG
+#define KC_LMOD     RGB_MOD
+#define KC_LHUI     RGB_HUI
+#define KC_LHUD     RGB_HUD
+#define KC_LSAI     RGB_SAI
+#define KC_LSAD     RGB_SAD
+#define KC_LVAI     RGB_VAI
+#define KC_LVAD     RGB_VAD
+#define KC_LSPI     RGB_SPI
+#define KC_LSPD     RGB_SPD
 
-#define KC_CTLTB CTL_T(KC_TAB)  // Ctrl+Tab
-#define KC_G(x) G(x)            // GUI
-#define KC_GESC GRAVE_ESC       // Grace Esc
+#define KC_CTLTB    CTL_T(KC_TAB)  // Ctrl+Tab
+#define KC_GESC     GRAVE_ESC      // Grace Esc
+#define KC_OLTOGL   OLTOGL
+#define KC_SHCAP    TD(SHFT_CAPS)
+#define KC_LOWBCK   LT(_LOWER, KC_BSPC)
+#define KC_RAIDEL   LT(_RAISE, KC_DEL)
+#define KC_SPALT    LALT_T(KC_SPACE)
 
-#define KC_TG(x) TG(x)
-
-#define KC_OLTOGL OLTOGL
-#define KC_SHCAP TD(SHFT_CAPS)
-
-// imports
 extern uint8_t is_master;
-__attribute__((weak))
-void shutdown_keymap(void) {}
-void rgb_matrix_update_pwm_buffers(void);
-// end imports
 
 enum custom_keycodes {
-  QWERTY = SAFE_RANGE,
-  LOWER,
-  RAISE,
-  ADJUST,
-  OLTOGL
+  OLTOGL = SAFE_RANGE
 };
 
 enum {
@@ -94,9 +83,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
       CTLTB,     A,     S,     D,     F,     G,                      H,     J,     K,     L,  SCLN,  QUOT,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      SHCAP,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH, SHCAP,\
+      SHCAP,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH,  RSFT,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                   LGUI, LOWER, SPACE,    ENTER, RAISE,  RALT
+                                   LGUI, SPALT,LOWBCK,   RAIDEL, ENTER,  RALT
                               //`--------------------'  `--------------------'
   ),
 
@@ -146,6 +135,17 @@ void persistent_default_layer_set(uint16_t default_layer) {
     default_layer_set(default_layer);
 }
 
+__attribute__((weak))
+layer_state_t layer_state_set_keymap(layer_state_t state) { return state; }
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+    state = update_tri_layer_state(state, _RAISE, _LOWER, _ADJUST);
+// #ifdef RGB_MATRIX_ENABLE
+//     state = layer_state_set_rgb(state);
+// #endif
+    return layer_state_set_keymap(state);
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     #ifdef OLED_DRIVER_ENABLE
         oled_timer = timer_read32();
@@ -153,36 +153,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     #endif
 
     switch (keycode) {
-        case QWERTY:
-            if (record->event.pressed) {
-                persistent_default_layer_set(1UL<<_QWERTY);
-            }
-            return false;
-        case LOWER:
-            if (record->event.pressed) {
-                layer_on(_LOWER);
-                update_tri_layer(_LOWER, _RAISE, _ADJUST);
-            } else {
-                layer_off(_LOWER);
-                update_tri_layer(_LOWER, _RAISE, _ADJUST);
-            }
-            return false;
-        case RAISE:
-            if (record->event.pressed) {
-                layer_on(_RAISE);
-                update_tri_layer(_LOWER, _RAISE, _ADJUST);
-            } else {
-                layer_off(_RAISE);
-                update_tri_layer(_LOWER, _RAISE, _ADJUST);
-            }
-            return false;
-        case ADJUST:
-            if (record->event.pressed) {
-                layer_on(_ADJUST);
-            } else {
-                layer_off(_ADJUST);
-            }
-            return false;
         case OLTOGL:
             if (record->event.pressed) {
                 oled_should_be_off = !oled_should_be_off;
@@ -241,17 +211,25 @@ void suspend_wakeup_init_user(void) {
 #endif
 }
 
-void set_background_red(void) {
 #ifdef RGB_MATRIX_ENABLE
+void rgb_matrix_update_pwm_buffers(void);
+#endif
+
+void set_background_red(void) {
     rgb_matrix_set_color_all( 0xFF, 0x00, 0x00 );
     rgb_matrix_update_pwm_buffers();
-#endif
 }
 
 /* on user initiated reset */
+__attribute__((weak))
+void shutdown_keymap(void) {}
+
 void shutdown_user(void) {
+#ifdef RGB_MATRIX_ENABLE
     set_background_red();
+#endif
     shutdown_keymap();
+
 }
 
 #ifdef OLED_DRIVER_ENABLE
