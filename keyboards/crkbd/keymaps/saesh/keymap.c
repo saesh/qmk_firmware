@@ -32,6 +32,7 @@
 #define KC_LOWBCK   LT(_LOWER, KC_BSPC)
 #define KC_RAIDEL   LT(_RAISE, KC_DEL)
 #define KC_SPALT    LALT_T(KC_SPACE)
+#define KC_OS_RSFT  OSM(MOD_RSFT)
 
 extern uint8_t is_master;
 
@@ -83,7 +84,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
       CTLTB,     A,     S,     D,     F,     G,                      H,     J,     K,     L,  SCLN,  QUOT,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      SHCAP,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH,  RSFT,\
+      SHCAP,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH, OS_RSFT,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
                                    LGUI, SPALT,LOWBCK,   RAIDEL, ENTER,  RALT
                               //`--------------------'  `--------------------'
