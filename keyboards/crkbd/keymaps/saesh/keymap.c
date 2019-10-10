@@ -72,9 +72,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_ADJUST] = LAYOUT_kc(
   //,-----------------------------------------.                ,-----------------------------------------.
-      XXXXX, XXXXX, XXXXX,  ERMR,  RST, OLTOGL,                  XXXXX, XXXXX,  MRWD,  MFFD, XXXXX, XXXXX,\
+      XXXXX, XXXXX, XXXXX,  ERMR,  RST, OLTOGL,               SECRET_1, XXXXX,  MRWD,  MFFD, XXXXX, XXXXX,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LTOG,  LHUI,  LSAI,  LVAI,  LSPI, XXXXX,                  XXXXX,  MPLY,  MPRV,  MNXT, XXXXX, XXXXX,\
+       LTOG,  LHUI,  LSAI,  LVAI,  LSPI, XXXXX,               SECRET_2,  MPLY,  MPRV,  MNXT, XXXXX, XXXXX,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LMOD,  LHUD,  LSAD,  LVAD,  LSPD, XXXXX,                  XXXXX, XXXXX,  VOLD,  VOLU,  MUTE, XXXXX,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
@@ -105,8 +105,14 @@ bool oled_process_record_user(uint16_t keycode, keyrecord_t *record) {
   return true;
 }
 
+__attribute__ ((weak))
+bool secrets_process_record_user(uint16_t keycode, keyrecord_t *record) {
+  return true;
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    return oled_process_record_user(keycode, record);
+    return    oled_process_record_user(keycode, record) &&
+           secrets_process_record_user(keycode, record);
 }
 
 __attribute__ ((weak))

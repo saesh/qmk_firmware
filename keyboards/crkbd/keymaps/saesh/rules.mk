@@ -49,3 +49,7 @@ RGB_MATRIX_ENABLE ?= no
 ifneq ($(strip $(RGB_MATRIX_ENABLE)), no)
     SRC += rgb.c
 endif
+
+ifneq ($(strip $(NO_SECRETS)), yes)
+    SRC += secrets.c
+endif

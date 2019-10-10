@@ -8,5 +8,10 @@
 #define _ADJUST 3
 
 enum custom_keycodes {
-  OLTOGL = SAFE_RANGE
+  OLTOGL = SAFE_RANGE,
+  KC_SECRET_1,
+  KC_SECRET_2,
+  KC_SECRET_3,
+  KC_SECRET_4,
+  KC_SECRET_5
 };
