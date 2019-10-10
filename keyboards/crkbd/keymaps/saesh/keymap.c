@@ -25,7 +25,6 @@
 #define KC_LSPD     RGB_SPD
 
 #define KC_CTLTB    CTL_T(KC_TAB)  // Ctrl+Tab
-#define KC_GESC     GRAVE_ESC      // Grace Esc
 #define KC_OLTOGL   OLTOGL
 #define KC_SHCAP    TD(SHFT_CAPS)
 #define KC_LOWBCK   LT(_LOWER, KC_BSPC)
