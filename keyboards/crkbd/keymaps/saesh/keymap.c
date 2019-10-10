@@ -1,4 +1,5 @@
 #include QMK_KEYBOARD_H
+#include "tapdances.h"
 
 #define _QWERTY 0
 #define _LOWER  1
@@ -38,15 +39,6 @@ extern uint8_t is_master;
 
 enum custom_keycodes {
   OLTOGL = SAFE_RANGE
-};
-
-enum {
-  SHFT_CAPS = 0
-};
-
-qk_tap_dance_action_t tap_dance_actions[] = {
-  //Tap once for Shift, twice for Caps Lock
-  [SHFT_CAPS]  = ACTION_TAP_DANCE_DOUBLE(KC_LSFT, KC_CAPS)
 };
 
 #ifdef OLED_DRIVER_ENABLE

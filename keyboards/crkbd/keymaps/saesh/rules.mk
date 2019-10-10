@@ -36,3 +36,7 @@ OPT_DEFS += -DKEYMAP_BRANCH=\"$(KEYMAP_BRANCH)\" \
             -DQMK_VERSION_TAG=\"$(QMK_VERSION_TAG)\" \
             -DBUILD_TIMESTAMP=\"$(BUILD_TIMESTAMP)\" \
             -DGIT_HASH=\"$(GIT_HASH)\"
+
+ifeq ($(strip $(TAP_DANCE_ENABLE)), yes)
+    SRC += tapdances.c
+endif
