@@ -87,11 +87,6 @@ void matrix_init_user(void) {}
 
 void matrix_scan_user(void) {}
 
-void persistent_default_layer_set(uint16_t default_layer) {
-    eeconfig_update_default_layer(default_layer);
-    default_layer_set(default_layer);
-}
-
 __attribute__((weak))
 layer_state_t layer_state_set_keymap(layer_state_t state) { return state; }
 
