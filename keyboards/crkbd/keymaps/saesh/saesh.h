@@ -9,6 +9,7 @@
 
 enum custom_keycodes {
   OLTOGL = SAFE_RANGE,
+  KC_MAKE,
   KC_SECRET_1,
   KC_SECRET_2,
   KC_SECRET_3,

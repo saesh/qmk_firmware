@@ -72,7 +72,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_ADJUST] = LAYOUT_kc(
   //,-----------------------------------------.                ,-----------------------------------------.
-      XXXXX, XXXXX, XXXXX,  ERMR,  RST, OLTOGL,               SECRET_1, XXXXX,  MRWD,  MFFD, XXXXX, XXXXX,\
+      XXXXX, XXXXX, XXXXX,  ERMR,  RST, OLTOGL,               SECRET_1, XXXXX,  MRWD,  MFFD, XXXXX,  MAKE,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LTOG,  LHUI,  LSAI,  LVAI,  LSPI, XXXXX,               SECRET_2,  MPLY,  MPRV,  MNXT, XXXXX, XXXXX,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
@@ -111,7 +111,33 @@ bool secrets_process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    return    oled_process_record_user(keycode, record) &&
+
+    switch (keycode) {
+        case KC_MAKE:
+            if (!record->event.pressed) {
+                uint8_t temp_mod = mod_config(get_mods());
+                uint8_t temp_osm = mod_config(get_oneshot_mods());
+                clear_mods();
+                clear_oneshot_mods();
+                send_string_with_delay_P(PSTR("make " QMK_KEYBOARD ":" QMK_KEYMAP), TAP_CODE_DELAY);
+            #ifndef MAKE_BOOTLOADER
+                if ((temp_mod | temp_osm) & MOD_MASK_SHIFT)
+            #endif
+                {
+                    send_string_with_delay_P(PSTR(":flash"), TAP_CODE_DELAY);
+                }
+                if ((temp_mod | temp_osm) & MOD_MASK_CTRL) {
+                    send_string_with_delay_P(PSTR(" -j8 --output-sync"), TAP_CODE_DELAY);
+                }
+                if ((temp_mod | temp_osm) & MOD_MASK_ALT) {
+                    send_string_with_delay_P(PSTR(" RGB_MATRIX_SPLIT_RIGHT=yes"), TAP_CODE_DELAY);
+                }
+                send_string_with_delay_P(PSTR(SS_TAP(X_ENTER)), TAP_CODE_DELAY);
+            }
+            break;
+    }
+
+    return oled_process_record_user(keycode, record) &&
            secrets_process_record_user(keycode, record);
 }
 
