@@ -40,3 +40,7 @@ OPT_DEFS += -DKEYMAP_BRANCH=\"$(KEYMAP_BRANCH)\" \
 ifeq ($(strip $(TAP_DANCE_ENABLE)), yes)
     SRC += tapdances.c
 endif
+
+ifeq ($(strip $(OLED_DRIVER_ENABLE)), yes)
+    SRC += oled.c
+endif
