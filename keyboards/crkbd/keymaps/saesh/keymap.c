@@ -53,7 +53,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 static bool oled_should_be_off = false;
 static uint32_t oled_timer = 0;
 static const char PROGMEM code_to_name[0xFF] = {
-// example: 0x2A = 42 maps to 27, lookup in font, 0-indexed, backspace (42) to left arrow
+
 //   0    1    2    3    4    5    6    7    8    9    A    B    c    D    E    F
     ' ', ' ', ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',  // 0x
     'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2',  // 1x
