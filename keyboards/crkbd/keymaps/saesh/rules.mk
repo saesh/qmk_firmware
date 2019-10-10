@@ -44,3 +44,8 @@ endif
 ifeq ($(strip $(OLED_DRIVER_ENABLE)), yes)
     SRC += oled.c
 endif
+
+RGB_MATRIX_ENABLE ?= no
+ifneq ($(strip $(RGB_MATRIX_ENABLE)), no)
+    SRC += rgb.c
+endif
