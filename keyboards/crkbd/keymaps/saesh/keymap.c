@@ -24,13 +24,13 @@
 #define KC_LSPI     RGB_SPI
 #define KC_LSPD     RGB_SPD
 
-#define KC_CTLTB    CTL_T(KC_TAB)  // Ctrl+Tab
-#define KC_OLTOGL   OLTOGL
-#define KC_SHCAP    TD(SHFT_CAPS)
-#define KC_LOWBCK   LT(_LOWER, KC_BSPC)
-#define KC_RAIDEL   LT(_RAISE, KC_DEL)
-#define KC_SPALT    LALT_T(KC_SPACE)
-#define KC_OS_RSFT  OSM(MOD_RSFT)
+#define KC_CTLTB    CTL_T(KC_TAB)
+#define KC_OLED     KC_TOGGLE_OLED
+#define KC_SFT_CAP  TD(SHIFT_CAPS)
+#define KC_L_BSP    LT(_LOWER, KC_BSPC)
+#define KC_R_DEL    LT(_RAISE, KC_DEL)
+#define KC_SPA_A    LALT_T(KC_SPACE)
+#define KC_SFT      OSM(MOD_RSFT)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_QWERTY] = LAYOUT_kc(
@@ -39,9 +39,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
       CTLTB,     A,     S,     D,     F,     G,                      H,     J,     K,     L,  SCLN,  QUOT,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      SHCAP,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH, OS_RSFT,\
+    SFT_CAP,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH,   SFT,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                   LGUI, SPALT,LOWBCK,   RAIDEL, ENTER,  RALT
+                                   LGUI, SPA_A, L_BSP,    R_DEL, ENTER,  RALT
                               //`--------------------'  `--------------------'
   ),
 
@@ -71,7 +71,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_ADJUST] = LAYOUT_kc(
   //,-----------------------------------------.                ,-----------------------------------------.
-      XXXXX, XXXXX, XXXXX,  ERMR,  RST, OLTOGL,               SECRET_1, XXXXX, XXXXX, XXXXX, XXXXX,  MAKE,\
+      XXXXX, XXXXX, XXXXX,  ERMR,  RST,   OLED,               SECRET_1, XXXXX, XXXXX, XXXXX, XXXXX,  MAKE,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LTOG,  LHUI,  LSAI,  LVAI,  LSPI, XXXXX,               SECRET_2, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
@@ -115,7 +115,6 @@ void makeFirmware(void) {
     {
         send_string_with_delay_P(PSTR(":flash"), TAP_CODE_DELAY);
     }
-
 
     // flash with RGB matrix modified for right side when Alt is pressed
     if ((modifier | oneshotkey) & MOD_MASK_ALT) {

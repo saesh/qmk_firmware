@@ -5,8 +5,8 @@
 extern uint8_t is_master;
 
 bool oled_should_be_off = false;
-uint32_t time_since_boot = 0;
-uint32_t oled_timer = 0;
+uint32_t time_boot = 0;
+uint32_t time_last_keypress = 0;
 
 const char PROGMEM code_to_name[0xFF] = {
 //   0    1    2    3    4    5    6    7    8    9    A    B    c    D    E    F
@@ -48,11 +48,11 @@ void add_to_keylog(uint16_t keycode) {
 }
 
 bool oled_process_record_user(uint16_t keycode, keyrecord_t *record) {
-    oled_timer = timer_read32();
+    time_last_keypress = timer_read32();
     add_to_keylog(keycode);
 
     switch (keycode) {
-        case OLTOGL:
+        case KC_TOGGLE_OLED:
             if (record->event.pressed) {
                 oled_should_be_off = !oled_should_be_off;
             }
@@ -63,7 +63,7 @@ bool oled_process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 // rotate both OLEDs by 270, orientiation is vertical
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-    time_since_boot = timer_read32();
+    time_boot = timer_read32();
 
     if (is_master) {
         return OLED_ROTATION_270;
@@ -131,7 +131,7 @@ void render_corne_logo(void) {
 
 void oled_task_user(void) {
     // disable OLED on idle and do not proceed
-    if (oled_should_be_off == true || timer_elapsed32(oled_timer) > 20000) {
+    if (oled_should_be_off == true || timer_elapsed32(time_last_keypress) > 20000) {
         oled_off();
         return;
     } else {
@@ -147,7 +147,7 @@ void oled_task_user(void) {
         render_mod_status();
         render_keylock_status();
     } else {
-        if (timer_elapsed32(time_since_boot) < 5000) {
+        if (timer_elapsed32(time_boot) < 5000) {
             render_qmk_info();
             return;
         }

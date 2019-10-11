@@ -2,6 +2,6 @@
 
 #ifdef TAP_DANCE_ENABLE
 enum {
-  SHFT_CAPS = 0
+  SHIFT_CAPS = 0
 };
 #endif
