@@ -100,5 +100,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_GRADIENT_UP_DOWN
 #endif
 
+#define OLED_FONT_H "keyboards/crkbd/lib/glcdfont.c"
+
 #undef PRODUCT
 #define PRODUCT crkbd saesh keymap

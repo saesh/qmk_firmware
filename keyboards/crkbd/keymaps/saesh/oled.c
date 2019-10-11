@@ -4,7 +4,9 @@
 extern uint8_t is_master;
 
 bool oled_should_be_off = false;
+uint32_t time_since_boot = 0;
 uint32_t oled_timer = 0;
+
 const char PROGMEM code_to_name[0xFF] = {
 //   0    1    2    3    4    5    6    7    8    9    A    B    c    D    E    F
     ' ', ' ', ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',  // 0x
@@ -60,6 +62,8 @@ bool oled_process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 // rotate both OLEDs by 270, orientiation is vertical
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
+    time_since_boot = timer_read32();
+
     if (is_master) {
         return OLED_ROTATION_270;
     }
@@ -114,6 +118,16 @@ void render_qmk_info(void) {
     oled_write_ln_P(PSTR(KEYMAP_BRANCH), false);
 }
 
+void render_corne_logo(void) {
+    static const char PROGMEM corne_logo[] = {
+        0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x89,0x8a,0x8b,0x8c,0x8d,0x8e,0x8f,0x90,0x91,0x92,0x93,0x94,
+        0xa0,0xa1,0xa2,0xa3,0xa4,0xa5,0xa6,0xa7,0xa8,0xa9,0xaa,0xab,0xac,0xad,0xae,0xaf,0xb0,0xb1,0xb2,0xb3,0xb4,
+        0xc0,0xc1,0xc2,0xc3,0xc4,0xc5,0xc6,0xc7,0xc8,0xc9,0xca,0xcb,0xcc,0xcd,0xce,0xcf,0xd0,0xd1,0xd2,0xd3,0xd4,0};
+
+    render_empty_line();
+    oled_write_P(corne_logo, false);
+}
+
 void oled_task_user(void) {
     // disable OLED on idle and do not proceed
     if (oled_should_be_off == true || timer_elapsed32(oled_timer) > 20000) {
@@ -132,6 +146,12 @@ void oled_task_user(void) {
         render_mod_status();
         render_keylock_status();
     } else {
-        render_qmk_info();
+        if (timer_elapsed32(time_since_boot) < 5000) {
+            render_qmk_info();
+            return;
+        }
+
+        render_corne_logo();
+        oled_scroll_left();
     }
 }
