@@ -99,6 +99,36 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     return layer_state_set_keymap(state);
 }
 
+void makeFirmware(void) {
+    uint8_t modifier = mod_config(get_mods());
+    uint8_t oneshotkey = mod_config(get_oneshot_mods());
+    clear_mods();
+    clear_oneshot_mods();
+
+    // build the firmware
+    send_string_with_delay_P(PSTR("make " QMK_KEYBOARD ":" QMK_KEYMAP), TAP_CODE_DELAY);
+
+    // flash when Shift is pressed
+#ifndef MAKE_BOOTLOADER
+    if ((modifier | oneshotkey) & MOD_MASK_SHIFT) {
+        send_string_with_delay_P(PSTR(":flash"), TAP_CODE_DELAY);
+    }
+#endif
+
+    // use multiple jobs when Ctrl is pressed
+    if ((modifier | oneshotkey) & MOD_MASK_CTRL) {
+        send_string_with_delay_P(PSTR(" -j8 --output-sync"), TAP_CODE_DELAY);
+    }
+
+    // flash with RGB matrix modified for right side when Alt is pressed
+    if ((modifier | oneshotkey) & MOD_MASK_ALT) {
+        send_string_with_delay_P(PSTR(" RGB_MATRIX_SPLIT_RIGHT=yes"), TAP_CODE_DELAY);
+    }
+
+    // execute command
+    send_string_with_delay_P(PSTR(SS_TAP(X_ENTER)), TAP_CODE_DELAY);
+}
+
 __attribute__ ((weak))
 bool oled_process_record_user(uint16_t keycode, keyrecord_t *record) {
   return true;
@@ -114,24 +144,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case KC_MAKE:
             if (!record->event.pressed) {
-                uint8_t temp_mod = mod_config(get_mods());
-                uint8_t temp_osm = mod_config(get_oneshot_mods());
-                clear_mods();
-                clear_oneshot_mods();
-                send_string_with_delay_P(PSTR("make " QMK_KEYBOARD ":" QMK_KEYMAP), TAP_CODE_DELAY);
-            #ifndef MAKE_BOOTLOADER
-                if ((temp_mod | temp_osm) & MOD_MASK_SHIFT)
-            #endif
-                {
-                    send_string_with_delay_P(PSTR(":flash"), TAP_CODE_DELAY);
-                }
-                if ((temp_mod | temp_osm) & MOD_MASK_CTRL) {
-                    send_string_with_delay_P(PSTR(" -j8 --output-sync"), TAP_CODE_DELAY);
-                }
-                if ((temp_mod | temp_osm) & MOD_MASK_ALT) {
-                    send_string_with_delay_P(PSTR(" RGB_MATRIX_SPLIT_RIGHT=yes"), TAP_CODE_DELAY);
-                }
-                send_string_with_delay_P(PSTR(SS_TAP(X_ENTER)), TAP_CODE_DELAY);
+                makeFirmware();
             }
             break;
     }
