@@ -110,15 +110,12 @@ void makeFirmware(void) {
 
     // flash when Shift is pressed
 #ifndef MAKE_BOOTLOADER
-    if ((modifier | oneshotkey) & MOD_MASK_SHIFT) {
+    if ((modifier | oneshotkey) & MOD_MASK_SHIFT)
+#endif
+    {
         send_string_with_delay_P(PSTR(":flash"), TAP_CODE_DELAY);
     }
-#endif
 
-    // use multiple jobs when Ctrl is pressed
-    if ((modifier | oneshotkey) & MOD_MASK_CTRL) {
-        send_string_with_delay_P(PSTR(" -j8 --output-sync"), TAP_CODE_DELAY);
-    }
 
     // flash with RGB matrix modified for right side when Alt is pressed
     if ((modifier | oneshotkey) & MOD_MASK_ALT) {
