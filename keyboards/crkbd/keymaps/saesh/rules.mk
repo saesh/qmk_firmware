@@ -29,12 +29,8 @@ GIT_HASH = $(shell \
 QMK_VERSION_TAG = $(shell \
  git describe --tags --abbrev=0 2>/dev/null)
 
-BUILD_TIMESTAMP = $(shell \
- date '+%Y-%m-%dT%H:%M:%S' 2>/dev/null)
-
 OPT_DEFS += -DKEYMAP_BRANCH=\"$(KEYMAP_BRANCH)\" \
             -DQMK_VERSION_TAG=\"$(QMK_VERSION_TAG)\" \
-            -DBUILD_TIMESTAMP=\"$(BUILD_TIMESTAMP)\" \
             -DGIT_HASH=\"$(GIT_HASH)\"
 
 ifeq ($(strip $(TAP_DANCE_ENABLE)), yes)

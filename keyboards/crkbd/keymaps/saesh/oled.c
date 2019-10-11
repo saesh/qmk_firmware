@@ -1,6 +1,7 @@
 #include QMK_KEYBOARD_H // sprintf
 #include "saesh.h" // layer codes
 #include "oled.h"
+#include "version.h"
 extern uint8_t is_master;
 
 bool oled_should_be_off = false;
@@ -113,7 +114,7 @@ void render_keylock_status(void) {
 
 void render_qmk_info(void) {
     oled_write_ln_P(PSTR("QMK " QMK_VERSION_TAG), false);
-    oled_write_ln_P(PSTR(BUILD_TIMESTAMP), false);
+    oled_write_ln_P(PSTR(QMK_BUILDDATE), false);
     oled_write_ln_P(PSTR(GIT_HASH), false);
     oled_write_ln_P(PSTR(KEYMAP_BRANCH), false);
 }
