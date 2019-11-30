@@ -6,7 +6,6 @@
 
 #define _______ KC_TRNS
 #define XXXXX KC_NO
-#define HOME_ALT MT(MOD_RALT, KC_HOME)
 #define LAG_SWAP MAGIC_SWAP_LALT_LGUI
 #define LAG_NORM MAGIC_UNSWAP_LALT_LGUI
 
