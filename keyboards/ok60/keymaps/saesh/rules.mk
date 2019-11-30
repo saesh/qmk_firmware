@@ -4,3 +4,4 @@ COMMAND_ENABLE   = no # disabled for space cadet feature, see https://beta.docs.
 BACKLIGHT_ENABLE = no
 RGBLIGHT_ENABLE  = no
 TAP_DANCE_ENABLE = yes
+NKRO_ENABLE      = yes
