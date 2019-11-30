@@ -6,20 +6,9 @@
 
 #define _______ KC_TRNS
 #define XXXXX KC_NO
-#define MEDIA_WIN_NEXT KC_MNXT
-#define MEDIA_MAC_NEXT KC_MFFD
 #define HOME_ALT MT(MOD_RALT, KC_HOME)
 #define LAG_SWAP MAGIC_SWAP_LALT_LGUI
 #define LAG_NORM MAGIC_UNSWAP_LALT_LGUI
-
-// Tap Dance Definitions
-enum {
-  TD_NEXT       = 2, // Media Next macOs, double tap Next windows
-};
-
-qk_tap_dance_action_t tap_dance_actions[] = {
-  [TD_NEXT]       = ACTION_TAP_DANCE_DOUBLE(MEDIA_WIN_NEXT, MEDIA_MAC_NEXT),
-};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
