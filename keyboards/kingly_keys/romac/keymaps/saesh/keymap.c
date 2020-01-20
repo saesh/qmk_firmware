@@ -17,6 +17,26 @@ enum custom_keys {
   KC_MAKE
 };
 
+#define DEFAULT_RBG_MODE 1
+static uint8_t current_rgb_mode = 1;
+
+static uint16_t current_rgb_hue = 30;
+static uint16_t current_rgb_sat = 200;
+static uint16_t current_rgb_val = 200;
+
+void save_rgb_hsv(void) {
+  current_rgb_hue = rgblight_get_hue();
+  current_rgb_val = rgblight_get_val();
+  current_rgb_sat = rgblight_get_sat();
+}
+
+void restore_rgb_mode(void) {
+  rgblight_mode(current_rgb_mode);
+  if (current_rgb_mode < 5) {
+    rgblight_sethsv(current_rgb_hue, current_rgb_sat, current_rgb_val);
+  }
+};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_NUMPAD] = LAYOUT(
 	KC_7,   KC_8, KC_9,
@@ -57,6 +77,9 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
   case U_LAYR: //cycles up the layers
     if (!record->event.pressed) {
       current_layer = layer_switch_get_layer(key);
+      if (current_layer == _RGB) {
+          save_rgb_hsv();
+      }
       next_layer = current_layer+1;
       layer_move(next_layer);
     }
@@ -64,6 +87,9 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
   case D_LAYR: //cycles down the layers
     if (!record->event.pressed) {
       current_layer = layer_switch_get_layer(key);
+      if (current_layer == _RGB) {
+          save_rgb_hsv();
+      }
       next_layer = current_layer-1;
       layer_move(next_layer);
     }
@@ -103,13 +129,14 @@ void matrix_init_kb(void) {
 }
 
 void matrix_init_user(void) {
-  rgblight_setrgb(0xff, 0x80, 0x00);
+  rgblight_sethsv (HSV_ORANGE);
+  rgblight_mode(DEFAULT_RBG_MODE);
 };
 
 uint32_t layer_state_set_user(uint32_t state) {
   switch (biton32(state)) {
     case 0: // NUM
-      rgblight_setrgb(RGB_ORANGE);
+      restore_rgb_mode();
       break;
     case 1: // NAV
       rgblight_setrgb(RGB_MAGENTA);
@@ -124,7 +151,7 @@ uint32_t layer_state_set_user(uint32_t state) {
       rgblight_setrgb(RGB_RED);
       break;
     default: //  for any other layers, or the default layer
-      rgblight_setrgb(RGB_ORANGE);
+      restore_rgb_mode();
       break;
     }
   return state;
