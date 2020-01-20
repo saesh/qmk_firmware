@@ -1,8 +1,7 @@
-#include "quantum.h"
-#include "action.h"
-#include "version.h"
-
 #include QMK_KEYBOARD_H
+
+#include "quantum.h"
+#include "version.h"
 
 enum my_layers {
   _NUMPAD = 0,
@@ -12,7 +11,7 @@ enum my_layers {
   _FN1PAD,
 };
 
-enum keys {
+enum custom_keys {
   U_LAYR = SAFE_RANGE,
   D_LAYR,
   KC_MAKE
@@ -44,16 +43,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	U_LAYR,  KC_NO,   D_LAYR),
 
   [_FN1PAD] = LAYOUT(
-	KC_NO, KC_NO,   KC_NO,
-	KC_NO, KC_NO,   RESET,
-	KC_NO, KC_NO,   KC_MAKE,
-	KC_NO, KC_LSFT, D_LAYR)
+	KC_NO,   KC_NO,   KC_NO,
+	KC_NO,   KC_NO,   RESET,
+	KC_NO,   KC_NO,   KC_MAKE,
+	KC_LCTL, KC_LSFT, D_LAYR)
 };
-
-__attribute__ ((weak))
-bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
-  return true;
-}
 
 bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
   keypos_t key;
@@ -74,28 +68,31 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
       layer_move(next_layer);
     }
     break;
-  }
-  return true;
-};
-
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
   case KC_MAKE:
     if (!record->event.pressed) {
-      uint8_t temp_mod = mod_config(get_mods());
-      uint8_t temp_osm = mod_config(get_oneshot_mods());
+      uint8_t mods = get_mods();
       clear_mods();
-      clear_oneshot_mods();
-      send_string_with_delay_P(PSTR("make " QMK_KEYBOARD ":" QMK_KEYMAP), TAP_CODE_DELAY);
-      if ((temp_mod | temp_osm) & MOD_MASK_SHIFT)
-      {
-          send_string_with_delay_P(PSTR(":flash"), TAP_CODE_DELAY);
+
+      if (mods & MOD_MASK_CTRL) {
+        send_string_with_delay_P(PSTR("sudo ./util/docker_build.sh " QMK_KEYBOARD ":" QMK_KEYMAP), TAP_CODE_DELAY);
+      } else {
+        send_string_with_delay_P(PSTR("make " QMK_KEYBOARD ":" QMK_KEYMAP), TAP_CODE_DELAY);
+      }
+
+      if (mods & MOD_MASK_SHIFT) {
+        send_string_with_delay_P(PSTR(":flash"), TAP_CODE_DELAY);
+      }
+
+      send_string_with_delay_P(PSTR(SS_TAP(X_ENTER)), 10);
+
+      if (mods & MOD_MASK_SHIFT) {
+        reset_keyboard();
       }
     }
     break;
   }
-  return process_record_keymap(keycode, record);
-}
+  return true;
+};
 
 void matrix_init_user(void) {
   rgblight_setrgb(0xff, 0x80, 0x00);
