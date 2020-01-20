@@ -127,10 +127,16 @@ void matrix_init_kb(void) {
 }
 
 void matrix_init_user(void) {
-  rgblight_enable();
-  save_rgb();
-  //restore_rgb();
 };
+
+bool rgb_colors_read = false;
+
+void keyboard_post_init_user(void) {
+  if (!rgb_colors_read) {
+    save_rgb();
+    rgb_colors_read = true;
+  }
+}
 
 uint16_t layer_indicator_timer;
 bool indicator_triggered = false;
@@ -175,7 +181,7 @@ uint32_t layer_state_set_user(uint32_t state) {
 }
 
 void matrix_scan_user(void) {
-  if (indicator_triggered && (timer_elapsed(layer_indicator_timer) > 1000)) {
+  if (indicator_triggered && (timer_elapsed(layer_indicator_timer) > 700)) {
     restore_rgb();
     indicator_triggered = false;
   }
