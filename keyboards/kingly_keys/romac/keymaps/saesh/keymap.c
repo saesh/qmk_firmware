@@ -127,7 +127,9 @@ void matrix_init_kb(void) {
 }
 
 void matrix_init_user(void) {
-  restore_rgb();
+  rgblight_enable();
+  save_rgb();
+  //restore_rgb();
 };
 
 uint16_t layer_indicator_timer;
@@ -136,33 +138,37 @@ bool indicator_triggered = false;
 uint32_t layer_state_set_user(uint32_t state) {
   switch (biton32(state)) {
     case _NUMPAD:
-      restore_rgb();
+      rgblight_sethsv_noeeprom(current_rgb_hue, current_rgb_sat, current_rgb_val);
+      rgblight_mode_noeeprom(current_rgb_mode);
+      indicator_triggered = false;
       break;
     case _NAVKEY:
-      rgblight_mode_noeeprom(1); 
-      rgblight_setrgb(RGB_MAGENTA);
+      rgblight_sethsv_noeeprom(HSV_MAGENTA);
+      rgblight_mode_noeeprom(1);
       layer_indicator_timer = timer_read();
       indicator_triggered = true;
       break;
     case _MEDIA:
-      rgblight_mode_noeeprom(1); 
-      rgblight_setrgb(RGB_TEAL);
+      rgblight_sethsv_noeeprom(HSV_TEAL);
+      rgblight_mode_noeeprom(1);
       layer_indicator_timer = timer_read();
       indicator_triggered = true;
       break;
     case _RGB:
+      rgblight_sethsv_noeeprom(HSV_WHITE);
       rgblight_mode_noeeprom(1); 
-      rgblight_setrgb(RGB_WHITE);
       layer_indicator_timer = timer_read();
       indicator_triggered = true;
       break;
     case _FN1PAD:
-      rgblight_mode_noeeprom(15); 
-      rgblight_setrgb(RGB_RED);
+      rgblight_sethsv_noeeprom(HSV_RED);
+      rgblight_mode_noeeprom(RGBLIGHT_MODE_BREATHING + 3); 
       indicator_triggered = false;
       break;
     default:
-      restore_rgb();
+      rgblight_sethsv_noeeprom(current_rgb_hue, current_rgb_sat, current_rgb_val);
+      rgblight_mode_noeeprom(current_rgb_mode);
+      indicator_triggered = false;
       break;
     }
   return state;
