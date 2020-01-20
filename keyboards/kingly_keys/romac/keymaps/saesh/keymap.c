@@ -14,27 +14,26 @@ enum my_layers {
 enum custom_keys {
   U_LAYR = SAFE_RANGE,
   D_LAYR,
-  KC_MAKE
+  KC_MAKE,
+  KC_SAFE
 };
 
 #define DEFAULT_RBG_MODE 1
 static uint8_t current_rgb_mode = 1;
-
 static uint16_t current_rgb_hue = 30;
-static uint16_t current_rgb_sat = 200;
+static uint16_t current_rgb_sat = 255;
 static uint16_t current_rgb_val = 200;
 
-void save_rgb_hsv(void) {
+void save_rgb(void) {
+  current_rgb_mode = rgblight_get_mode();
   current_rgb_hue = rgblight_get_hue();
   current_rgb_val = rgblight_get_val();
   current_rgb_sat = rgblight_get_sat();
 }
 
-void restore_rgb_mode(void) {
+void restore_rgb(void) {
   rgblight_mode(current_rgb_mode);
-  if (current_rgb_mode < 5) {
-    rgblight_sethsv(current_rgb_hue, current_rgb_sat, current_rgb_val);
-  }
+  rgblight_sethsv(current_rgb_hue, current_rgb_sat, current_rgb_val);
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -60,7 +59,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	RGB_SAI, RGB_VAI, RGB_HUI,
 	RGB_SAD, RGB_VAD, RGB_HUD,
 	RGB_TOG, RGB_MOD, KC_NO,
-	U_LAYR,  KC_NO,   D_LAYR),
+	U_LAYR,  KC_SAFE, D_LAYR),
 
   [_FN1PAD] = LAYOUT(
 	KC_NO,   KC_NO,   KC_NO,
@@ -77,9 +76,6 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
   case U_LAYR: //cycles up the layers
     if (!record->event.pressed) {
       current_layer = layer_switch_get_layer(key);
-      if (current_layer == _RGB) {
-          save_rgb_hsv();
-      }
       next_layer = current_layer+1;
       layer_move(next_layer);
     }
@@ -87,9 +83,6 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
   case D_LAYR: //cycles down the layers
     if (!record->event.pressed) {
       current_layer = layer_switch_get_layer(key);
-      if (current_layer == _RGB) {
-          save_rgb_hsv();
-      }
       next_layer = current_layer-1;
       layer_move(next_layer);
     }
@@ -116,6 +109,11 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
       }
     }
     break;
+  case KC_SAFE:
+    if (!record->event.pressed) {
+      save_rgb();
+    }
+    break;
   }
   return true;
 };
@@ -129,30 +127,50 @@ void matrix_init_kb(void) {
 }
 
 void matrix_init_user(void) {
-  rgblight_sethsv (HSV_ORANGE);
-  rgblight_mode(DEFAULT_RBG_MODE);
+  restore_rgb();
 };
+
+uint16_t layer_indicator_timer;
+bool indicator_triggered = false;
 
 uint32_t layer_state_set_user(uint32_t state) {
   switch (biton32(state)) {
-    case 0: // NUM
-      restore_rgb_mode();
+    case _NUMPAD:
+      restore_rgb();
       break;
-    case 1: // NAV
+    case _NAVKEY:
+      rgblight_mode_noeeprom(1); 
       rgblight_setrgb(RGB_MAGENTA);
+      layer_indicator_timer = timer_read();
+      indicator_triggered = true;
       break;
-    case 2: // MEDIA
+    case _MEDIA:
+      rgblight_mode_noeeprom(1); 
       rgblight_setrgb(RGB_TEAL);
+      layer_indicator_timer = timer_read();
+      indicator_triggered = true;
       break;
-    case 3: // RGB
+    case _RGB:
+      rgblight_mode_noeeprom(1); 
       rgblight_setrgb(RGB_WHITE);
+      layer_indicator_timer = timer_read();
+      indicator_triggered = true;
       break;
-    case 4: // FN
+    case _FN1PAD:
+      rgblight_mode_noeeprom(15); 
       rgblight_setrgb(RGB_RED);
+      indicator_triggered = false;
       break;
-    default: //  for any other layers, or the default layer
-      restore_rgb_mode();
+    default:
+      restore_rgb();
       break;
     }
   return state;
+}
+
+void matrix_scan_user(void) {
+  if (indicator_triggered && (timer_elapsed(layer_indicator_timer) > 1000)) {
+    restore_rgb();
+    indicator_triggered = false;
+  }
 }
