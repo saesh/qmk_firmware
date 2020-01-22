@@ -44,14 +44,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	U_LAYR, KC_0, KC_NO),
 
   [_NAVKEY] = LAYOUT(
-	KC_HOME, KC_INS,  KC_PGUP,
-	KC_END,  KC_UP,   KC_PGDN,
-	KC_LEFT, KC_DOWN, KC_RGHT,
-	U_LAYR,  KC_NO,   D_LAYR),
+	KC_HOME, KC_UP,   KC_PGUP,
+	KC_LEFT, KC_ENT,  KC_RGHT,
+	KC_END,  KC_DOWN, KC_PGDN,
+	U_LAYR,  KC_INS,  D_LAYR),
 
   [_MEDIA] = LAYOUT(
 	KC_MUTE, KC_VOLD, KC_VOLU,
-	KC_NO,   KC_MPLY, KC_NO,
+	KC_MPRV, KC_MPLY, KC_MNXT,
 	KC_NO,   KC_NO,   KC_NO,
 	U_LAYR,  KC_NO,   D_LAYR),
 
@@ -62,7 +62,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	U_LAYR,  KC_SAFE, D_LAYR),
 
   [_FN1PAD] = LAYOUT(
-	KC_NO,   KC_NO,   KC_NO,
+	KC_PWR,  KC_NO,   KC_NO,
 	KC_NO,   KC_NO,   RESET,
 	KC_NO,   KC_NO,   KC_MAKE,
 	KC_LCTL, KC_LSFT, D_LAYR)
@@ -181,7 +181,7 @@ uint32_t layer_state_set_user(uint32_t state) {
 }
 
 void matrix_scan_user(void) {
-  if (indicator_triggered && (timer_elapsed(layer_indicator_timer) > 700)) {
+  if (indicator_triggered && (timer_elapsed(layer_indicator_timer) > 750)) {
     restore_rgb();
     indicator_triggered = false;
   }
