@@ -6,6 +6,7 @@
 enum my_layers {
   _NUMPAD = 0,
   _NAVKEY,
+  _KERBAL,
   _MEDIA,
   _RGB,
   _FN1PAD,
@@ -48,6 +49,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	KC_LEFT, KC_ENT,  KC_RGHT,
 	KC_END,  KC_DOWN, KC_PGDN,
 	U_LAYR,  KC_INS,  D_LAYR),
+
+  [_KERBAL] = LAYOUT(
+    KC_DOT,  KC_F5,    KC_T,
+	KC_COMM, KC_M,     KC_R,
+	KC_G,    KC_SPACE, KC_NO,
+	U_LAYR,  KC_LALT,  D_LAYR),
 
   [_MEDIA] = LAYOUT(
 	KC_MUTE, KC_VOLD, KC_VOLU,
@@ -154,6 +161,12 @@ uint32_t layer_state_set_user(uint32_t state) {
       layer_indicator_timer = timer_read();
       indicator_triggered = true;
       break;
+    case _KERBAL:
+      rgblight_sethsv_noeeprom(HSV_GREEN);
+      rgblight_mode_noeeprom(1);
+      layer_indicator_timer = timer_read();
+      indicator_triggered = true;
+      break;
     case _MEDIA:
       rgblight_sethsv_noeeprom(HSV_TEAL);
       rgblight_mode_noeeprom(1);
@@ -162,13 +175,13 @@ uint32_t layer_state_set_user(uint32_t state) {
       break;
     case _RGB:
       rgblight_sethsv_noeeprom(HSV_WHITE);
-      rgblight_mode_noeeprom(1); 
+      rgblight_mode_noeeprom(1);
       layer_indicator_timer = timer_read();
       indicator_triggered = true;
       break;
     case _FN1PAD:
       rgblight_sethsv_noeeprom(HSV_RED);
-      rgblight_mode_noeeprom(RGBLIGHT_MODE_BREATHING + 3); 
+      rgblight_mode_noeeprom(RGBLIGHT_MODE_BREATHING + 3);
       indicator_triggered = false;
       break;
     default:
