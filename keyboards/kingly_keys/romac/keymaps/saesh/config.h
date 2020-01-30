@@ -8,5 +8,3 @@
   #define RGBLIGHT_VAL_STEP 8
   #define RGBLIGHT_ANIMATIONS
 #endif
-
-#define TAP_CODE_DELAY 5
