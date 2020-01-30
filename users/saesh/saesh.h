@@ -4,7 +4,7 @@
 #include "version.h"
 
 enum user_custom_keys {
-  MAKE = SAFE_RANGE,
+  KC_MAKE = SAFE_RANGE,
   KC_SECRET_1,
   KC_SECRET_2,
   KC_SECRET_3,
