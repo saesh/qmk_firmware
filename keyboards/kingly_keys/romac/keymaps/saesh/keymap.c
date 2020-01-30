@@ -1,7 +1,6 @@
 #include QMK_KEYBOARD_H
 
-#include "quantum.h"
-#include "version.h"
+#include "saesh.h"
 
 enum my_layers {
   _NUMPAD = 0,
@@ -13,9 +12,8 @@ enum my_layers {
 };
 
 enum custom_keys {
-  U_LAYR = SAFE_RANGE,
+  U_LAYR = NEW_SAFE_RANGE,
   D_LAYR,
-  KC_MAKE,
   KC_SAFE
 };
 
@@ -69,10 +67,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	U_LAYR,  KC_SAFE, D_LAYR),
 
   [_FN1PAD] = LAYOUT(
-	KC_PWR,  KC_NO,   KC_NO,
-	KC_NO,   KC_NO,   RESET,
-	KC_NO,   KC_NO,   KC_MAKE,
-	KC_LCTL, KC_LSFT, D_LAYR)
+	KC_PWR,  KC_SECRET_1, KC_NO,
+	KC_NO,   KC_SECRET_2, RESET,
+	KC_NO,   KC_SECRET_3, MAKE,
+	KC_LCTL, KC_LSFT,     D_LAYR)
 };
 
 bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
@@ -94,35 +92,13 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
       layer_move(next_layer);
     }
     break;
-  case KC_MAKE:
-    if (!record->event.pressed) {
-      uint8_t mods = get_mods();
-      clear_mods();
-
-      if (mods & MOD_MASK_CTRL) {
-        send_string_with_delay_P(PSTR("sudo ./util/docker_build.sh " QMK_KEYBOARD ":" QMK_KEYMAP), TAP_CODE_DELAY);
-      } else {
-        send_string_with_delay_P(PSTR("make " QMK_KEYBOARD ":" QMK_KEYMAP), TAP_CODE_DELAY);
-      }
-
-      if (mods & MOD_MASK_SHIFT) {
-        send_string_with_delay_P(PSTR(":flash"), TAP_CODE_DELAY);
-      }
-
-      send_string_with_delay_P(PSTR(SS_TAP(X_ENTER)), 10);
-
-      if (mods & MOD_MASK_SHIFT) {
-        reset_keyboard();
-      }
-    }
-    break;
   case KC_SAFE:
     if (!record->event.pressed) {
       save_rgb();
     }
     break;
   }
-  return true;
+  return process_record_user(keycode, record);
 };
 
 void matrix_init_kb(void) {
