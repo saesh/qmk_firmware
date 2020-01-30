@@ -10,6 +10,29 @@ bool secrets_process_record_user(uint16_t keycode, keyrecord_t *record) {
   return true;
 }
 
+__attribute__ ((weak))
+void matrix_init_keymap() {}
+
+void matrix_init_user(void) {
+  matrix_init_keymap();
+}
+
+__attribute__ ((weak))
+uint32_t layer_state_set_keymap(uint32_t state) {
+  return state;
+}
+
+uint32_t layer_state_set_user(uint32_t state) {
+  return layer_state_set_keymap(state);
+}
+
+__attribute__ ((weak))
+void led_set_keymap(uint8_t usb_led) {}
+
+void led_set_user(uint8_t usb_led) {
+  led_set_keymap(usb_led);
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch(keycode) {
       case KC_MAKE:

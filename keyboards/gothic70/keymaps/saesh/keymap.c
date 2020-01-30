@@ -4,7 +4,7 @@
 
 // Tap Dance Declarations
 enum {
-    TD_SCAPS = 0
+  TD_SCAPS = 0
 };
 
 #define SCAPS_LG TD(TD_SCAPS)
@@ -28,15 +28,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [2] = LAYOUT(
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,           RESET, \
-    _______, _______, _______, _______, _______, _______,          _______, _______, _______, _______, _______, _______, _______, _______,         KC_MAKE, \
-    _______, AG_SWAP, AG_NORM, _______, _______, _______,          _______, _______, _______, _______, _______, _______,          KC_MPLY,         KC_SLEP, \
+    KC_SLEP, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,         KC_MAKE, \
+    _______, _______, _______, _______,   RESET, _______,          _______, _______, _______, _______, _______, _______, _______, _______,         _______, \
+    _______, AG_SWAP, AG_NORM, _______, _______, _______,          _______, _______, _______, _______, _______, _______,          KC_MPLY,         _______, \
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                   KC_VOLU,         \
     _______, _______, _______,          _______, _______,          _______,          _______,                   _______,          KC_MPRV, KC_VOLD, KC_MNXT \
   )
 };
 
-void matrix_init_user(void) {
+void matrix_init_keymap(void) {
   // set CapsLock LED to output and low
   setPinOutput(F7);
   writePinLow(F7);
@@ -48,37 +48,32 @@ void matrix_init_user(void) {
   writePinLow(F5);
 }
 
-void matrix_scan_user(void) {
-
-}
-
-uint32_t layer_state_set_user(uint32_t state)
-{
-    if (state & (1<<1)) {
+uint32_t layer_state_set_keymap(uint32_t state) {
+  if (state & (1<<1)) {
     writePinHigh(F5);
-    } else if (state & (1<<2)) {
-        writePinLow(F5);
-        writePinHigh(F6);
-    } else if (state & (1<<3)) {
-        writePinHigh(F5);
-        writePinHigh(F6);
-    } else {
-        writePinLow(F5);
-        writePinLow(F6);
-    }
-    return state;
+  } else if (state & (1<<2)) {
+    writePinLow(F5);
+    writePinHigh(F6);
+  } else if (state & (1<<3)) {
+    writePinHigh(F5);
+    writePinHigh(F6);
+  } else {
+    writePinLow(F5);
+    writePinLow(F6);
+  }
+  return state;
 }
 
-void led_set_user(uint8_t usb_led) {
-    if (IS_LED_ON(usb_led, USB_LED_CAPS_LOCK)) {
-        writePinHigh(F7);
-    } else {
-        writePinLow(F7);
-    }
+void led_set_keymap(uint8_t usb_led) {
+  if (IS_LED_ON(usb_led, USB_LED_CAPS_LOCK)) {
+    writePinHigh(F7);
+  } else {
+    writePinLow(F7);
+  }
 }
 
 // Tap Dance Definitions
 qk_tap_dance_action_t tap_dance_actions[] = {
-    // double tap for caps
-    [TD_SCAPS] = ACTION_TAP_DANCE_DOUBLE(KC_LSFT, KC_CAPS),
+  // double tap for caps
+  [TD_SCAPS] = ACTION_TAP_DANCE_DOUBLE(KC_LSFT, KC_CAPS),
 };
