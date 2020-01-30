@@ -1,13 +1,18 @@
 #include "saesh.h"
 
 __attribute__ ((weak))
+bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
+  return true;
+}
+
+__attribute__ ((weak))
 bool secrets_process_record_user(uint16_t keycode, keyrecord_t *record) {
   return true;
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch(keycode) {
-      case MAKE:
+      case KC_MAKE:
       if (!record->event.pressed) {
         uint8_t mods = get_mods();
         clear_mods();
@@ -31,5 +36,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       break;
     }
 
-    return secrets_process_record_user(keycode, record);
+    return secrets_process_record_user(keycode, record) && 
+           process_record_keymap(keycode, record);
 }

@@ -14,7 +14,8 @@ enum my_layers {
 enum custom_keys {
   U_LAYR = NEW_SAFE_RANGE,
   D_LAYR,
-  KC_SAFE
+  KC_SAFE,
+  KC_SHOT,
 };
 
 #define DEFAULT_RBG_MODE 1
@@ -49,10 +50,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	U_LAYR,  KC_INS,  D_LAYR),
 
   [_KERBAL] = LAYOUT(
-    KC_DOT,  KC_F5,    KC_T,
-	KC_COMM, KC_M,     KC_R,
-	KC_G,    KC_SPACE, KC_NO,
-	U_LAYR,  KC_LALT,  D_LAYR),
+  KC_DOT,   KC_R,     KC_T,
+	KC_COMM,  KC_M,     KC_U,
+	KC_SLASH, KC_SPACE, LALT(KC_L),
+	U_LAYR,   KC_SHOT,  D_LAYR),
 
   [_MEDIA] = LAYOUT(
 	KC_MUTE, KC_VOLD, KC_VOLU,
@@ -69,11 +70,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_FN1PAD] = LAYOUT(
 	KC_PWR,  KC_SECRET_1, KC_NO,
 	KC_NO,   KC_SECRET_2, RESET,
-	KC_NO,   KC_SECRET_3, MAKE,
+	KC_NO,   KC_SECRET_3, KC_MAKE,
 	KC_LCTL, KC_LSFT,     D_LAYR)
 };
 
-bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
+bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
   keypos_t key;
   uint8_t current_layer;
   uint8_t next_layer;
@@ -97,8 +98,14 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
       save_rgb();
     }
     break;
+  case KC_SHOT:
+    if (!record->event.pressed) {
+      SEND_STRING(SS_TAP(X_F2)SS_TAP(X_F12)SS_TAP(X_F2));
+    }
+    break;
   }
-  return process_record_user(keycode, record);
+
+  return true;
 };
 
 void matrix_init_kb(void) {
