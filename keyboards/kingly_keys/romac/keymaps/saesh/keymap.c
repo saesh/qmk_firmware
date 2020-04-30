@@ -41,7 +41,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	KC_7,   KC_8, KC_9,
 	KC_4,   KC_5, KC_6,
 	KC_1,   KC_2, KC_3,
-	U_LAYR, KC_0, KC_NO),
+	U_LAYR, KC_0, KC_ENT),
 
   [_NAVKEY] = LAYOUT(
 	KC_HOME, KC_UP,   KC_PGUP,
@@ -116,12 +116,9 @@ void matrix_init_kb(void) {
    PORTB &= ~(1<<0);
 }
 
-void matrix_init_user(void) {
-};
-
 bool rgb_colors_read = false;
 
-void keyboard_post_init_user(void) {
+void keyboard_post_init_keymap(void) {
   if (!rgb_colors_read) {
     save_rgb();
     rgb_colors_read = true;
@@ -131,7 +128,7 @@ void keyboard_post_init_user(void) {
 uint16_t layer_indicator_timer;
 bool indicator_triggered = false;
 
-uint32_t layer_state_set_user(uint32_t state) {
+uint32_t layer_state_set_keymap(uint32_t state) {
   switch (biton32(state)) {
     case _NUMPAD:
       rgblight_sethsv_noeeprom(current_rgb_hue, current_rgb_sat, current_rgb_val);
@@ -176,7 +173,7 @@ uint32_t layer_state_set_user(uint32_t state) {
   return state;
 }
 
-void matrix_scan_user(void) {
+void matrix_scan_keymap(void) {
   if (indicator_triggered && (timer_elapsed(layer_indicator_timer) > 750)) {
     restore_rgb();
     indicator_triggered = false;
