@@ -3,6 +3,10 @@
 #include "quantum.h"
 #include "version.h"
 
+enum tap_dancers {
+  TD_GRAVE = 0
+};
+
 enum user_custom_keys {
   KC_MAKE = SAFE_RANGE,
   KC_SECRET_1,
@@ -12,6 +16,8 @@ enum user_custom_keys {
   KC_SECRET_5,
   NEW_SAFE_RANGE
 };
+
+#define CK_EGT   TD(TD_GRAVE) // escape, grave, tilde
 
 void matrix_init_user(void);
 void matrix_init_keymap(void);

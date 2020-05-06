@@ -62,3 +62,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return secrets_process_record_user(keycode, record) && 
            process_record_keymap(keycode, record);
 }
+
+void tap_dance_esc_grave_tilde(qk_tap_dance_state_t *state, void *user_data) {
+  switch(state->count) {
+  case 1:
+    tap_code(KC_ESC);
+    break;
+  case 2:
+    SEND_STRING("`");
+    break;
+  case 3:
+    SEND_STRING("~");
+    break;
+  }
+}
+
+qk_tap_dance_action_t tap_dance_actions[] = {
+  [TD_GRAVE] = ACTION_TAP_DANCE_FN(tap_dance_esc_grave_tilde),
+};
