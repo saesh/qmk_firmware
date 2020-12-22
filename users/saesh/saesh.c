@@ -41,7 +41,7 @@ Key pressed: build locally
 Key pressed + ctrl: build with Docker
 Key pressed [ctrl|none] + shift: reset and flash
 
-/**/
+*/
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch(keycode) {
       case KC_MAKE:
