@@ -4,7 +4,8 @@
 #include "version.h"
 
 enum tap_dancers {
-  TD_GRAVE = 0
+  TD_GRAVE = 0,
+  TD_QUIT  = 1,
 };
 
 enum user_custom_keys {
@@ -18,6 +19,7 @@ enum user_custom_keys {
 };
 
 #define CK_EGT   TD(TD_GRAVE) // escape, grave, tilde
+#define KC_QUIT  TD(TD_QUIT) // gui+shift+q on double q
 
 void matrix_init_user(void);
 void matrix_init_keymap(void);
