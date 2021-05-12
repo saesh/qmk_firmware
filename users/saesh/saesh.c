@@ -50,7 +50,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         clear_mods();
 
         if (mods & MOD_MASK_CTRL) {
-          send_string_with_delay_P(PSTR("sudo ./util/docker_build.sh " QMK_KEYBOARD ":" QMK_KEYMAP), TAP_CODE_DELAY);
+          send_string_with_delay_P(PSTR("sudo echo 'building and flashing ...' && sudo ./util/docker_build.sh " QMK_KEYBOARD ":" QMK_KEYMAP), TAP_CODE_DELAY);
         } else {
           send_string_with_delay_P(PSTR("make " QMK_KEYBOARD ":" QMK_KEYMAP), TAP_CODE_DELAY);
         }
