@@ -23,7 +23,7 @@ enum user_custom_keys {
 
 void matrix_init_user(void);
 void matrix_init_keymap(void);
-uint32_t layer_state_set_user(uint32_t state);
+// uint32_t layer_state_set_user(uint32_t state);
 uint32_t layer_state_set_keymap(uint32_t state);
 void led_set_user(uint8_t usb_led);
 void led_set_keymap(uint8_t usb_led);

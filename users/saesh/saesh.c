@@ -22,9 +22,9 @@ uint32_t layer_state_set_keymap(uint32_t state) {
   return state;
 }
 
-uint32_t layer_state_set_user(uint32_t state) {
-  return layer_state_set_keymap(state);
-}
+// uint32_t layer_state_set_user(uint32_t state) {
+//   return layer_state_set_keymap(state);
+// }
 
 __attribute__ ((weak))
 void led_set_keymap(uint8_t usb_led) {}
